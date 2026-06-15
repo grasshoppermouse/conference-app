@@ -8,8 +8,10 @@ const ASSETS = [
   "./bootstrap-icons.min.css",
   "./bootstrap.bundle.min.js",
   "./bootstrap.min.css",
-  "./fonts/bootstrap-icons.woff",
-  "./fonts/bootstrap-icons.woff2",
+  "./star.svg",
+  "./star-fill.svg",
+  // "./fonts/bootstrap-icons.woff",
+  // "./fonts/bootstrap-icons.woff2",
 ];
 
 self.addEventListener("install", (event) => {

@@ -76,7 +76,7 @@
                                     data-id="{{session.id}}"
                                     title="Favorite"
                                 >
-                                    <i class="bi bi-star"></i>
+                                    <img src="./star.svg" alt="Favorite" />
                                 </button>
                             </h2>
                             <div
@@ -103,7 +103,10 @@
                                             data-id="{{talk.id}}"
                                             title="Favorite"
                                         >
-                                            <i class="bi bi-star"></i>
+                                            <img
+                                                src="./star.svg"
+                                                alt="Favorite"
+                                            />
                                         </button>
                                     </div>
 
@@ -135,9 +138,10 @@
                                                         data-id="{{talk.id}}"
                                                         title="Favorite"
                                                     >
-                                                        <i
-                                                            class="bi bi-star"
-                                                        ></i>
+                                                        <img
+                                                            src="./star.svg"
+                                                            alt="Favorite"
+                                                        />
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
@@ -181,13 +185,11 @@
                         `.fav-btn[data-type="${type}"][data-id="${id}"]`,
                     );
                     buttons.forEach((btn) => {
-                        const icon = btn.querySelector("i");
+                        const img = btn.querySelector("img");
                         if (isFav) {
-                            icon.classList.add("bi-star-fill");
-                            icon.classList.remove("bi-star");
+                            img.src = "./star-fill.svg";
                         } else {
-                            icon.classList.add("bi-star");
-                            icon.classList.remove("bi-star-fill");
+                            img.src = "./star.svg";
                         }
                     });
                 }

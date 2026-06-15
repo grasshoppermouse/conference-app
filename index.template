@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>HBES 2027</title>
+        <meta name="theme-color" content="#18bc9c" />
+        <link rel="manifest" href="manifest.json" />
+        <link href="bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="bootstrap-icons.min.css" />
+        <style>
+            .fav-btn {
+                cursor: pointer;
+                padding: 0;
+                margin-left: 8px;
+                border: none;
+                background: none;
+                color: #ffc107;
+                /* Bootstrap warning color for yellow/gold */
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <h3>HBES 2027</h3>
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                {% for item in d -%}
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link"
+                        id="pills-{{item.day}}-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#pills-{{item.day}}"
+                        type="button"
+                        role="tab"
+                        aria-controls="pills-{{item.day}}"
+                        aria-selected="true"
+                    >
+                        {{item.day}}
+                    </button>
+                </li>
+                {% endfor -%}
+            </ul>
+
+            <div class="tab-content" id="pills-tabContent">
+                {% for item in d -%}
+                <div
+                    class="tab-pane fade show"
+                    id="pills-{{item.day}}"
+                    role="tabpanel"
+                    aria-labelledby="pills-{{item.day}}-tab"
+                    tabindex="0"
+                >
+                    <div class="accordion" id="accordion{{item.day}}">
+                        {% for session in item.data -%}
+                        <div class="accordion-item">
+                            <h2
+                                class="accordion-header d-flex justify-content-between align-items-center"
+                            >
+                                <button
+                                    class="accordion-button"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{session.id}}"
+                                    aria-expanded="true"
+                                    aria-controls="collapse{{session.id}}"
+                                >
+                                    {{session.time}}. {{session.title}}<br />
+                                    {{session.location}}
+                                </button>
+                                <button
+                                    type="button"
+                                    class="fav-btn"
+                                    data-type="session"
+                                    data-id="{{session.id}}"
+                                    title="Favorite"
+                                >
+                                    <i class="bi bi-star"></i>
+                                </button>
+                            </h2>
+                            <div
+                                id="collapse{{session.id}}"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#accordion{{item.day}}"
+                            >
+                                <div class="accordion-body">
+                                    {% for talk in session.talk -%}
+                                    <div class="d-flex align-items-center">
+                                        <button
+                                            type="button"
+                                            class="btn btn-light text-start"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#Modal{{talk.id}}"
+                                        >
+                                            {{talk.start_time}}.
+                                            {{talk.html_title}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="fav-btn"
+                                            data-type="talk"
+                                            data-id="{{talk.id}}"
+                                            title="Favorite"
+                                        >
+                                            <i class="bi bi-star"></i>
+                                        </button>
+                                    </div>
+
+                                    <div
+                                        class="modal fade"
+                                        id="Modal{{talk.id}}"
+                                        tabindex="-1"
+                                        aria-labelledby="Modal{{talk.id}}Label"
+                                        aria-hidden="true"
+                                    >
+                                        <div
+                                            class="modal-dialog modal-dialog-scrollable"
+                                        >
+                                            <div class="modal-content">
+                                                <div
+                                                    class="modal-header d-flex justify-content-between align-items-center"
+                                                >
+                                                    <!-- <h1 class="modal-title fs-5" id="Modal{{talk.id}}Label">{{talk.html_title}}</h1> -->
+                                                    <button
+                                                        type="button"
+                                                        class="btn-close"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close"
+                                                    ></button>
+                                                    <button
+                                                        type="button"
+                                                        class="fav-btn"
+                                                        data-type="talk"
+                                                        data-id="{{talk.id}}"
+                                                        title="Favorite"
+                                                    >
+                                                        <i
+                                                            class="bi bi-star"
+                                                        ></i>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{talk.abstract}}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal"
+                                                    >
+                                                        Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor -%}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor -%}
+                    </div>
+                </div>
+                {% endfor -%}
+            </div>
+        </div>
+
+        <script src="bootstrap.bundle.min.js"></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const favorites = JSON.parse(
+                    localStorage.getItem("conference_favorites") || "{}",
+                );
+
+                function updateFavoriteIcons(type, id) {
+                    const key = `${type}:${id}`;
+                    const isFav = !!favorites[key];
+                    const buttons = document.querySelectorAll(
+                        `.fav-btn[data-type="${type}"][data-id="${id}"]`,
+                    );
+                    buttons.forEach((btn) => {
+                        const icon = btn.querySelector("i");
+                        if (isFav) {
+                            icon.classList.add("bi-star-fill");
+                            icon.classList.remove("bi-star");
+                        } else {
+                            icon.classList.add("bi-star");
+                            icon.classList.remove("bi-star-fill");
+                        }
+                    });
+                }
+
+                // Initial render of favorite icons
+                document.querySelectorAll(".fav-btn").forEach((btn) => {
+                    updateFavoriteIcons(btn.dataset.type, btn.dataset.id);
+                });
+
+                document.querySelectorAll(".fav-btn").forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        const id = btn.dataset.id;
+                        const type = btn.dataset.type;
+                        const key = `${type}:${id}`;
+
+                        if (favorites[key]) {
+                            delete favorites[key];
+                        } else {
+                            favorites[key] = true;
+                        }
+
+                        localStorage.setItem(
+                            "conference_favorites",
+                            JSON.stringify(favorites),
+                        );
+                        updateFavoriteIcons(type, id);
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker
+                        .register("./sw.js")
+                        .then((registration) => {
+                            console.log(
+                                "Service worker with scope:",
+                                registration.scope,
+                            );
+                        })
+                        .catch((error) => {
+                            console.log(
+                                "Service worker registration failed:",
+                                error,
+                            );
+                        });
+                });
+            }
+        </script>
+    </body>
+</html>

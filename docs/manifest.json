@@ -1,0 +1,23 @@
+{
+  "short_name": "HBES2027",
+  "name": "HBES 2027",
+  "description": "Browse days, sessions, presentations, and track your favorites offline.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#2c3e50",
+  "theme_color": "#18bc9c",
+  "display": "standalone",
+  "orientation": "portrait"
+}

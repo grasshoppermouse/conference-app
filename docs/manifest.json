@@ -15,6 +15,14 @@
       "purpose": "any maskable"
     }
   ],
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "1170x2532",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
   "start_url": "./index.html",
   "background_color": "#2c3e50",
   "theme_color": "#18bc9c",

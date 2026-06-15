@@ -4,5 +4,5 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-This is a shiny conference app that runs in the browser using [shinylive](https://posit-dev.github.io/r-shinylive/).
+This is a PWA conference app built using bootstrap.
 

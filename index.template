@@ -18,6 +18,13 @@
                 color: #ffc107;
                 /* Bootstrap warning color for yellow/gold */
             }
+            body {
+                padding-bottom: 70px; /* Prevent content from being covered by the menubar */
+            }
+
+            .nav-item_active {
+                color: #18bc9c !important; /* Match your theme color */
+            }
         </style>
     </head>
 
@@ -41,6 +48,21 @@
                     </button>
                 </li>
                 {% endfor -%}
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link"
+                        id="pills-authors-tab"
+                        data-bs-toggle="pill"
+                        data-bs-target="#pills-authors"
+                        type="button"
+                        role="tab"
+                        aria-controls="pills-authors"
+                        aria-selected="true"
+                    >
+                        <i class="bi bi-person fs-4"></i>
+                        <div style="font-size: 10px">Authors</div>
+                    </button>
+                </li>
             </ul>
 
             <div class="tab-content" id="pills-tabContent">
@@ -170,6 +192,34 @@
             </div>
         </div>
 
+        <!-- Bottom Navigation Bar -->
+        <nav
+            class="fixed-bottom bg-white border-top shadow-sm"
+            style="height: 60px"
+        >
+            <div
+                class="container d-flex justify-content-around align-items-center"
+            >
+                <a
+                    href="#pills-tabContent"
+                    class="text-decoration-none text-dark text-center"
+                >
+                    <i class="bi bi-calendar3 fs-4"></i>
+                    <div style="font-size: 10px">Schedule</div>
+                </a>
+                <a
+                    href="#"
+                    class="text-decoration-none text-muted text-center"
+                    id="nav-favorites"
+                    data-toggle-fav="true"
+                >
+                    <i class="bi bi-star fs-4"></i>
+                    <div style="font-size: 10px">Favorites</div>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Scripts -->
         <script src="bootstrap.bundle.min.js"></script>
 
         <script>

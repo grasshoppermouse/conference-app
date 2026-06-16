@@ -48,7 +48,7 @@
                     </button>
                 </li>
                 {% endfor -%}
-                <li class="nav-item" role="presentation">
+                <li class="nav-item ms-auto" role="presentation">
                     <button
                         class="nav-link"
                         id="pills-authors-tab"
@@ -60,7 +60,7 @@
                         aria-selected="true"
                     >
                         <i class="bi bi-person fs-4"></i>
-                        <div style="font-size: 10px">Authors</div>
+                        <!--<div style="font-size: 10px">Authors</div>-->
                     </button>
                 </li>
             </ul>
@@ -131,56 +131,6 @@
                                             />
                                         </button>
                                     </div>
-
-                                    <div
-                                        class="modal fade"
-                                        id="Modal{{talk.id}}"
-                                        tabindex="-1"
-                                        aria-labelledby="Modal{{talk.id}}Label"
-                                        aria-hidden="true"
-                                    >
-                                        <div
-                                            class="modal-dialog modal-dialog-scrollable"
-                                        >
-                                            <div class="modal-content">
-                                                <div
-                                                    class="modal-header d-flex justify-content-between align-items-center"
-                                                >
-                                                    <!-- <h1 class="modal-title fs-5" id="Modal{{talk.id}}Label">{{talk.html_title}}</h1> -->
-                                                    <button
-                                                        type="button"
-                                                        class="btn-close"
-                                                        data-bs-dismiss="modal"
-                                                        aria-label="Close"
-                                                    ></button>
-                                                    <button
-                                                        type="button"
-                                                        class="fav-btn"
-                                                        data-type="talk"
-                                                        data-id="{{talk.id}}"
-                                                        title="Favorite"
-                                                    >
-                                                        <img
-                                                            src="./star.svg"
-                                                            alt="Favorite"
-                                                        />
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {{talk.abstract}}
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-secondary"
-                                                        data-bs-dismiss="modal"
-                                                    >
-                                                        Close
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     {% endfor -%}
                                 </div>
                             </div>
@@ -189,6 +139,62 @@
                     </div>
                 </div>
                 {% endfor -%}
+                <div
+                    class="tab-pane fade show"
+                    id="pills-authors"
+                    role="tabpanel"
+                    aria-labelledby="pills-authors-tab"
+                    tabindex="0"
+                >
+                    <div class="accordion" id="accordion-authors">
+                    {% for author in authors -%}
+                    <div class="accordion-item">
+                        <h2
+                            class="accordion-header d-flex justify-content-between align-items-center"
+                        >
+                            <button
+                                class="accordion-button"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{author.author_id}}"
+                                aria-expanded="true"
+                                aria-controls="collapse{{author.author_id}}"
+                            >
+                                {{author.data.0.author_name}}
+                            </button>
+                        </h2>
+                        <div
+                            id="collapse{{author.author_id}}"
+                            class="accordion-collapse collapse"
+                            data-bs-parent="#accordion-authors"
+                        >
+                            <div class="accordion-body">
+                                {% for talk in author.data -%}
+                                <div class="d-flex align-items-center">
+                                    <a
+                                        href="#"
+                                        class="btn btn-light text-start"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#Modal{{talk.abstract}}"
+                                    >
+                                        {{talk.daytimelocation}}. <strong>{{talk.title}}</strong>
+                                    </a>
+                                    <button
+                                        type="button"
+                                        class="fav-btn"
+                                        data-type="talk"
+                                        data-id="{{talk.abstract}}"
+                                        title="Favorite"
+                                    >
+                                        <img src="./star.svg" alt="Favorite" />
+                                    </button>
+                                </div>
+                                {% endfor -%}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor -%}
+                </div>
             </div>
         </div>
 
@@ -218,6 +224,45 @@
                 </a>
             </div>
         </nav>
+
+        <!-- Global Modals Container -->
+        <div class="modals-container">
+          {% for item in d -%}
+            {% for session in item.data -%}
+              {% for talk in session.talk -%}
+                <div class="modal fade" id="Modal{{talk.id}}" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header d-flex justify-content-between align-items-center">
+                        <h6 class="modal-title">Abstract</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button
+                            type="button"
+                            class="fav-btn"
+                            data-type="talk"
+                            data-id="{{talk.id}}"
+                            title="Favorite"
+                        >
+                            <img
+                                src="./star.svg"
+                                alt="Favorite"
+                            />
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        {{talk.abstract}}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- If you have authors loop, you'd do the same here or ensure unique IDs -->
+              {% endfor -%}
+            {% endfor -%}
+          {% endfor -%}
+        </div>
 
         <!-- Scripts -->
         <script src="bootstrap.bundle.min.js"></script>

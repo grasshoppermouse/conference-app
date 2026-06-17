@@ -28,9 +28,10 @@
         </style>
     </head>
 
-    <body>
-        <div class="container-fluid">
-            <h3>HBES 2027</h3>
+    <body class="pb-70">
+        <!-- Main Content View -->
+        <div id="app-main-content" class="container-fluid">
+            <h3 class="mb-4">HBES 2027</h3>
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 {% for item in d -%}
                 <li class="nav-item" role="presentation">
@@ -57,15 +58,16 @@
                         type="button"
                         role="tab"
                         aria-controls="pills-authors"
-                        aria-selected="true"
+                        aria-selected="false"
                     >
                         <i class="bi bi-person fs-4"></i>
-                        <!--<div style="font-size: 10px">Authors</div>-->
+                        <div style="font-size: 10px">Authors</div>
                     </button>
                 </li>
             </ul>
 
             <div class="tab-content" id="pills-tabContent">
+                <!-- Schedule View -->
                 {% for item in d -%}
                 <div
                     class="tab-pane fade show"
@@ -96,6 +98,8 @@
                                     class="fav-btn"
                                     data-type="session"
                                     data-id="{{session.id}}"
+                                    data-time="{{session.startdatetime}}"
+                                    data-location="{{session.location}}"
                                     title="Favorite"
                                 >
                                     <img src="./star.svg" alt="Favorite" />
@@ -108,7 +112,7 @@
                             >
                                 <div class="accordion-body">
                                     {% for talk in session.talk -%}
-                                    <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center mb-2">
                                         <button
                                             type="button"
                                             class="btn btn-light text-start"
@@ -123,6 +127,8 @@
                                             class="fav-btn"
                                             data-type="talk"
                                             data-id="{{talk.id}}"
+                                            data-time="{{talk.startdatetime}}"
+                                            data-location="{{talk.location}}"
                                             title="Favorite"
                                         >
                                             <img
@@ -139,63 +145,76 @@
                     </div>
                 </div>
                 {% endfor -%}
+
+                <!-- Authors View -->
                 <div
-                    class="tab-pane fade show"
+                    class="tab-pane fade"
                     id="pills-authors"
                     role="tabpanel"
                     aria-labelledby="pills-authors-tab"
                     tabindex="0"
                 >
                     <div class="accordion" id="accordion-authors">
-                    {% for author in authors -%}
-                    <div class="accordion-item">
-                        <h2
-                            class="accordion-header d-flex justify-content-between align-items-center"
-                        >
-                            <button
-                                class="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{author.author_id}}"
-                                aria-expanded="true"
-                                aria-controls="collapse{{author.author_id}}"
+                        {% for author in authors -%}
+                        <div class="accordion-item">
+                            <h2
+                                class="accordion-header d-flex justify-content-between align-items-center"
                             >
-                                {{author.data.0.author_name}}
-                            </button>
-                        </h2>
-                        <div
-                            id="collapse{{author.author_id}}"
-                            class="accordion-collapse collapse"
-                            data-bs-parent="#accordion-authors"
-                        >
-                            <div class="accordion-body">
-                                {% for talk in author.data -%}
-                                <div class="d-flex align-items-center">
-                                    <a
-                                        href="#"
-                                        class="btn btn-light text-start"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#Modal{{talk.abstract}}"
-                                    >
-                                        {{talk.daytimelocation}}. <strong>{{talk.title}}</strong>
-                                    </a>
-                                    <button
-                                        type="button"
-                                        class="fav-btn"
-                                        data-type="talk"
-                                        data-id="{{talk.abstract}}"
-                                        title="Favorite"
-                                    >
-                                        <img src="./star.svg" alt="Favorite" />
-                                    </button>
+                                <button
+                                    class="accordion-button"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{author.author_id}}"
+                                    aria-expanded="true"
+                                    aria-controls="collapse{{author.author_id}}"
+                                >
+                                    {{author.data.0.author_name}}
+                                </button>
+                            </h2>
+                            <div
+                                id="collapse{{author.author_id}}"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#accordion-authors"
+                            >
+                                <div class="accordion-body">
+                                    {% for talk in author.data -%}
+                                    <div class="d-flex align-items-center mb-2">
+                                        <a
+                                            href="#"
+                                            class="btn btn-light text-start"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#Modal{{talk.abstract}}"
+                                        >
+                                            {{talk.daytimelocation}}.
+                                            <strong>{{talk.title}}</strong>
+                                        </a>
+                                        <button
+                                            type="button"
+                                            class="fav-btn"
+                                            data-type="talk"
+                                            data-id="{{talk.abstract}}"
+                                            title="Favorite"
+                                        >
+                                            <img
+                                                src="./star.svg"
+                                                alt="Favorite"
+                                            />
+                                        </button>
+                                    </div>
+                                    {% endfor -%}
                                 </div>
-                                {% endfor -%}
                             </div>
                         </div>
+                        {% endfor -%}
                     </div>
-                    {% endfor -%}
                 </div>
             </div>
+        </div>
+
+        <!-- View for Favorites -->
+        <div id="app-favorites-view" style="display: none">
+            <h3 class="mb-4">Your Favorites</h3>
+            <div id="favorites-list"></div>
         </div>
 
         <!-- Bottom Navigation Bar -->
@@ -207,17 +226,17 @@
                 class="container d-flex justify-content-around align-items-center"
             >
                 <a
-                    href="#pills-tabContent"
-                    class="text-decoration-none text-dark text-center"
+                    href="#"
+                    id="btn-nav-schedule"
+                    class="text-decoration-none text-dark text-center nav-link-btn"
                 >
                     <i class="bi bi-calendar3 fs-4"></i>
                     <div style="font-size: 10px">Schedule</div>
                 </a>
                 <a
                     href="#"
-                    class="text-decoration-none text-muted text-center"
-                    id="nav-favorites"
-                    data-toggle-fav="true"
+                    id="btn-nav-favorites"
+                    class="text-decoration-none text-muted text-center nav-link-btn"
                 >
                     <i class="bi bi-star fs-4"></i>
                     <div style="font-size: 10px">Favorites</div>
@@ -226,45 +245,44 @@
         </nav>
 
         <!-- Global Modals Container -->
-        <div class="modals-container">
-          {% for item in d -%}
-            {% for session in item.data -%}
-              {% for talk in session.talk -%}
-                <div class="modal fade" id="Modal{{talk.id}}" tabindex="-1" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-scrollable">
+        <div id="global-modals">
+            {% for item in d -%} {% for session in item.data -%} {% for talk in
+            session.talk -%}
+            <div
+                class="modal fade"
+                id="Modal{{talk.id}}"
+                tabindex="-1"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog modal-dialog-scrollable">
                     <div class="modal-content">
-                      <div class="modal-header d-flex justify-content-between align-items-center">
-                        <h6 class="modal-title">Abstract</h6>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <button
-                            type="button"
-                            class="fav-btn"
-                            data-type="talk"
-                            data-id="{{talk.id}}"
-                            title="Favorite"
+                        <div
+                            class="modal-header d-flex justify-content-between align-items-center"
                         >
-                            <img
-                                src="./star.svg"
-                                alt="Favorite"
-                            />
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        {{talk.abstract}}
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      </div>
+                            <h6 class="modal-title">{{talk.html_title}}</h6>
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">{{talk.abstract}}</div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
-                  </div>
                 </div>
-                <!-- If you have authors loop, you'd do the same here or ensure unique IDs -->
-              {% endfor -%}
-            {% endfor -%}
-          {% endfor -%}
+            </div>
+            {% endfor -%} {% endfor -%} {% endfor -%}
         </div>
 
-        <!-- Scripts -->
         <script src="bootstrap.bundle.min.js"></script>
 
         <script>
@@ -272,6 +290,8 @@
                 const favorites = JSON.parse(
                     localStorage.getItem("conference_favorites") || "{}",
                 );
+                const mainZone = document.getElementById("app-main-content");
+                const favsZone = document.getElementById("app-favorites-view");
 
                 function updateFavoriteIcons(type, id) {
                     const key = `${type}:${id}`;
@@ -289,21 +309,33 @@
                     });
                 }
 
-                // Initial render of favorite icons
-                document.querySelectorAll(".fav-btn").forEach((btn) => {
-                    updateFavoriteIcons(btn.dataset.type, btn.dataset.id);
-                });
-
                 document.querySelectorAll(".fav-btn").forEach((btn) => {
                     btn.addEventListener("click", () => {
                         const id = btn.dataset.id;
                         const type = btn.dataset.type;
                         const key = `${type}:${id}`;
 
+                        // Extract metadata from data attributes or fallback to button text
+                        let title = "Favorite Item";
+                        if (btn.parentElement.querySelector("button")) {
+                            title = btn.parentElement
+                                .querySelector("button")
+                                .innerText.split("\n")[0];
+                        }
+
+                        const time = btn.dataset.time || "";
+                        const location = btn.dataset.location || "";
+
                         if (favorites[key]) {
                             delete favorites[key];
                         } else {
-                            favorites[key] = true;
+                            // Save the rich metadata object
+                            favorites[key] = {
+                                title: title,
+                                time: time,
+                                location: location,
+                                timestamp: new Date().toLocaleString(),
+                            };
                         }
 
                         localStorage.setItem(
@@ -313,28 +345,61 @@
                         updateFavoriteIcons(type, id);
                     });
                 });
-            });
-        </script>
 
-        <script>
-            if ("serviceWorker" in navigator) {
-                window.addEventListener("load", () => {
-                    navigator.serviceWorker
-                        .register("./sw.js")
-                        .then((registration) => {
-                            console.log(
-                                "Service worker with scope:",
-                                registration.scope,
-                            );
-                        })
-                        .catch((error) => {
-                            console.log(
-                                "Service worker registration failed:",
-                                error,
-                            );
-                        });
+                // Initial render of icons
+                document.querySelectorAll(".fav-btn").forEach((btn) => {
+                    updateFavoriteIcons(btn.dataset.type, btn.dataset.id);
                 });
-            }
+
+                document
+                    .getElementById("btn-nav-schedule")
+                    .addEventListener("click", (e) => {
+                        e.preventDefault();
+                        if (mainZone) mainZone.style.display = "block";
+                        if (favsZone) favsZone.style.display = "none";
+                    });
+
+                document
+                    .getElementById("btn-nav-favorites")
+                    .addEventListener("click", (e) => {
+                        e.preventDefault();
+                        if (mainZone) mainZone.style.display = "none";
+                        if (favsZone) favsZone.style.display = "block";
+                        renderFavoritesList();
+                    });
+
+                function renderFavoritesList() {
+                    const listContainer =
+                        document.getElementById("favorites-list");
+                    if (!listContainer) return;
+                    listContainer.innerHTML = "";
+
+                    const keys = Object.keys(favorites);
+                    if (keys.length === 0) {
+                        listContainer.innerHTML =
+                            '<p class="text-muted">No favorites yet.</p>';
+                        return;
+                    }
+
+                    keys.forEach((key) => {
+                        const data = favorites[key];
+                        const div = document.createElement("div");
+                        div.className = "card mb-3 shadow-sm";
+
+                        // Build a more informative display for sessions vs talks
+                        let content = `<h6 class="mb-1 text-primary">${data.title}</h6>`;
+                        if (data.time) {
+                            content += `<p class="mb-0 small"><i class="bi bi-clock"></i> ${data.time}</p>`;
+                        }
+                        if (data.location) {
+                            content += `<p class="mb-0 small"><i class="bi bi-geo-alt"></i> ${data.location}</p>`;
+                        }
+
+                        div.innerHTML = `<div class="card-body">${content}</div>`;
+                        listContainer.appendChild(div);
+                    });
+                }
+            });
         </script>
     </body>
 </html>

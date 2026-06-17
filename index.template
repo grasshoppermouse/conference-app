@@ -25,6 +25,14 @@
             .nav-item_active {
                 color: #18bc9c !important; /* Match your theme color */
             }
+
+            /* Highlight for active bottom nav items */
+            .nav-link-btn.active-nav {
+                color: #18bc9c !important; /* Your theme's teal color */
+                font-weight: bold;
+                transform: scale(1.1);
+                transition: all 0.2s ease-in-out;
+            }
         </style>
     </head>
 
@@ -286,11 +294,25 @@
         <script src="bootstrap.bundle.min.js"></script>
 
         <script>
+            // Helper function to handle active state toggling
+            function setActiveNav(btnId) {
+                const scheduleBtn = document.getElementById("btn-nav-schedule");
+                const favsBtn = document.getElementById("btn-nav-favorites");
+
+                // Remove active class from both
+                if (scheduleBtn) scheduleBtn.classList.remove("active-nav");
+                if (favsBtn) favsBtn.classList.remove("active-nav");
+
+                // Add active class to the clicked one
+                const activeBtn = document.getElementById(btnId);
+                if (activeBtn) activeBtn.classList.add("active-nav");
+            }
+
             document.addEventListener("DOMContentLoaded", () => {
                 const favorites = JSON.parse(
                     localStorage.getItem("conference_favorites") || "{}",
                 );
-                const mainZone = document.getElementById("app-main-content");
+                const mainContent = document.getElementById("app-main-content");
                 const favsZone = document.getElementById("app-favorites-view");
 
                 function updateFavoriteIcons(type, id) {
@@ -309,31 +331,38 @@
                     });
                 }
 
+                // Initial render of favorite icons
+                document.querySelectorAll(".fav-btn").forEach((btn) => {
+                    updateFavoriteIcons(btn.dataset.type, btn.dataset.id);
+                });
+
+                // Favorite button click logic
                 document.querySelectorAll(".fav-btn").forEach((btn) => {
                     btn.addEventListener("click", () => {
                         const id = btn.dataset.id;
                         const type = btn.dataset.type;
                         const key = `${type}:${id}`;
 
-                        // Extract metadata from data attributes or fallback to button text
-                        let title = "Favorite Item";
+                        let labelText = "Favorite Item";
                         if (btn.parentElement.querySelector("button")) {
-                            title = btn.parentElement
-                                .querySelector("button")
-                                .innerText.split("\n")[0];
+                            labelText =
+                                btn.parentElement.querySelector(
+                                    "button",
+                                ).innerText;
+                        } else if (btn.closest(".d-flex")) {
+                            const otherBtn = btn
+                                .closest(".d-flex")
+                                .querySelector("button");
+                            if (otherBtn) labelText = otherBtn.innerText;
                         }
-
-                        const time = btn.dataset.time || "";
-                        const location = btn.dataset.location || "";
 
                         if (favorites[key]) {
                             delete favorites[key];
                         } else {
-                            // Save the rich metadata object
                             favorites[key] = {
-                                title: title,
-                                time: time,
-                                location: location,
+                                title: labelText,
+                                time: btn.dataset.time || "", // Ensure we grab the ISO string from data-time attribute
+                                location: btn.dataset.location || "",
                                 timestamp: new Date().toLocaleString(),
                             };
                         }
@@ -346,33 +375,32 @@
                     });
                 });
 
-                // Initial render of icons
-                document.querySelectorAll(".fav-btn").forEach((btn) => {
-                    updateFavoriteIcons(btn.dataset.type, btn.dataset.id);
-                });
-
+                // Navigation Listeners
                 document
                     .getElementById("btn-nav-schedule")
                     .addEventListener("click", (e) => {
                         e.preventDefault();
-                        if (mainZone) mainZone.style.display = "block";
+                        console.log("Navigating to Schedule");
+                        if (mainContent) mainContent.style.display = "block";
                         if (favsZone) favsZone.style.display = "none";
+                        setActiveNav("btn-nav-schedule");
                     });
 
                 document
                     .getElementById("btn-nav-favorites")
                     .addEventListener("click", (e) => {
                         e.preventDefault();
-                        if (mainZone) mainZone.style.display = "none";
+                        console.log("Navigating to Favorites");
+                        if (mainContent) mainContent.style.display = "none";
                         if (favsZone) favsZone.style.display = "block";
                         renderFavoritesList();
+                        setActiveNav("btn-nav-favorites");
                     });
 
                 function renderFavoritesList() {
                     const listContainer =
                         document.getElementById("favorites-list");
                     if (!listContainer) return;
-                    listContainer.innerHTML = "";
 
                     const keys = Object.keys(favorites);
                     if (keys.length === 0) {
@@ -381,15 +409,44 @@
                         return;
                     }
 
-                    keys.forEach((key) => {
-                        const data = favorites[key];
+                    // Map to objects and Sort by Date
+                    let favItems = keys.map((key) => ({
+                        key: key,
+                        data: favorites[key],
+                    }));
+
+                    favItems.sort((a, b) => {
+                        const dateA = new Date(a.data.time);
+                        const dateB = new Date(b.data.time);
+                        return dateA - dateB; // Sorts chronologically (earliest to latest)
+                    });
+
+                    listContainer.innerHTML = "";
+                    favItems.forEach((item) => {
+                        const data = item.data;
                         const div = document.createElement("div");
                         div.className = "card mb-3 shadow-sm";
 
-                        // Build a more informative display for sessions vs talks
+                        let formattedTime = "";
+                        if (data.time) {
+                            const dateObj = new Date(data.time);
+                            // Format to: Monday, Oct 25 - 10:30 AM
+                            formattedTime =
+                                dateObj.toLocaleDateString("en-US", {
+                                    weekday: "long",
+                                    month: "short",
+                                    day: "numeric",
+                                }) +
+                                " - " +
+                                dateObj.toLocaleTimeString("en-US", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                });
+                        }
+
                         let content = `<h6 class="mb-1 text-primary">${data.title}</h6>`;
                         if (data.time) {
-                            content += `<p class="mb-0 small"><i class="bi bi-clock"></i> ${data.time}</p>`;
+                            content += `<p class="mb-0 small"><i class="bi bi-calendar"></i> ${formattedTime}</p>`;
                         }
                         if (data.location) {
                             content += `<p class="mb-0 small"><i class="bi bi-geo-alt"></i> ${data.location}</p>`;
@@ -399,6 +456,13 @@
                         listContainer.appendChild(div);
                     });
                 }
+
+                // Set initial state on page load
+                window.addEventListener("DOMContentLoaded", () => {
+                    document
+                        .getElementById("btn-nav-schedule")
+                        .classList.add("active-nav");
+                });
             });
         </script>
     </body>

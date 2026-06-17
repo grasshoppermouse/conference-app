@@ -263,6 +263,7 @@
                 class="modal fade"
                 id="Modal{{talk.id}}"
                 tabindex="-1"
+                aria-labelledby="Modal{{talk.id}}Label"
                 aria-hidden="true"
             >
                 <div class="modal-dialog modal-dialog-scrollable">
@@ -270,13 +271,30 @@
                         <div
                             class="modal-header d-flex justify-content-between align-items-center"
                         >
-                            <h6 class="modal-title">{{talk.html_title}}</h6>
-                            <button
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
+                            <!-- Title hidden as requested, but keeping a space for layout -->
+                            <span>Abstract</span>
+                            <div class="d-flex align-items-center gap-3">
+                                <!-- Favorite Button -->
+                                <button
+                                    type="button"
+                                    class="fav-btn"
+                                    data-type="talk"
+                                    data-id="{{talk.id}}"
+                                    data-time="{{talk.startdatetime}}"
+                                    data-location="{{talk.location}}"
+                                    data-title="{{talk.title}}"
+                                    title="Favorite"
+                                >
+                                    <img src="./star.svg" alt="Favorite" />
+                                </button>
+                                <!-- Close Button -->
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
                         </div>
                         <div class="modal-body">{{talk.abstract}}</div>
                         <div class="modal-footer">
@@ -347,7 +365,9 @@
                         const key = `${type}:${id}`;
 
                         let labelText = "Favorite Item";
-                        if (btn.parentElement.querySelector("button")) {
+                        if (btn.dataset.title) {
+                            labelText = btn.dataset.title;
+                        } else if (btn.parentElement.querySelector("button")) {
                             labelText =
                                 btn.parentElement.querySelector(
                                     "button",

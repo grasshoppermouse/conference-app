@@ -300,7 +300,10 @@
                             class="modal-header d-flex justify-content-between align-items-center"
                         >
                             <!-- Title hidden as requested, but keeping a space for layout -->
-                            <span>Abstract</span>
+                            <span
+                                >{{talk.day}}, {{talk.start_time}}.
+                                {{talk.location}}</span
+                            >
                             <div class="d-flex align-items-center gap-3">
                                 <!-- Favorite Button -->
                                 <button

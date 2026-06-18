@@ -252,7 +252,7 @@
 
         <!-- View for Favorites -->
         <div id="app-favorites-view" style="display: none">
-            <h3 class="mb-4">Favorites</h3>
+            <h3 class="mb-4" style="padding-left: 10px">Favorites</h3>
             <div id="favorites-list"></div>
         </div>
 
@@ -477,9 +477,21 @@
 
                     listContainer.innerHTML = "";
                     favItems.forEach((item) => {
+                        const [type, id] = item.key.split(":");
                         const data = item.data;
                         const div = document.createElement("div");
-                        div.className = "card mb-3 shadow-sm";
+                        let content = ``;
+                        if (type === "talk") {
+                            div.className = "card rounded-0";
+                            div.setAttribute("role", "button");
+                            div.setAttribute("tabindex", "0"); // Allows keyboard focusing
+                            div.setAttribute("data-bs-toggle", "modal");
+                            div.setAttribute("data-bs-target", `#Modal${id}`);
+                            content = `<h6 class="mb-1 text-primary">${data.title}</h6>`;
+                        } else {
+                            div.className = "card rounded-0 bg-info text-white";
+                            content = `<h6 class="mb-1 text-white">${data.title}</h6>`;
+                        }
 
                         let formattedTime = "";
                         if (data.time) {
@@ -498,7 +510,6 @@
                                 });
                         }
 
-                        let content = `<h6 class="mb-1 text-primary">${data.title}</h6>`;
                         if (data.time) {
                             content += `<p class="mb-0 small"><i class="bi bi-calendar"></i> ${formattedTime}</p>`;
                         }
@@ -508,6 +519,7 @@
 
                         div.innerHTML = `<div class="card-body">${content}</div>`;
                         listContainer.appendChild(div);
+                        console.log(div);
                     });
                 }
 

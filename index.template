@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>HBES 2027</title>
-        <meta name="theme-color" content="#18bc9c" />
+        <meta name="theme-color" content="#ecb73c" />
         <link rel="manifest" href="manifest.json" />
         <link href="bootstrap.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="bootstrap-icons.min.css" />
@@ -23,12 +23,12 @@
             }
 
             .nav-item_active {
-                color: #18bc9c !important; /* Match your theme color */
+                color: #ecb73c !important; /* Match your theme color */
             }
 
             /* Highlight for active bottom nav items */
             .nav-link-btn.active-nav {
-                color: #18bc9c !important; /* Your theme's teal color */
+                color: #ecb73c !important; /* Your theme's teal color */
                 font-weight: bold;
                 transform: scale(1.1);
                 transition: all 0.2s ease-in-out;

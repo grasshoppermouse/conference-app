@@ -122,11 +122,11 @@
                                 class="accordion-header d-flex justify-content-between align-items-center"
                             >
                                 <button
-                                    class="accordion-button"
+                                    class="accordion-button collapsed"
                                     type="button"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#collapse{{session.id}}"
-                                    aria-expanded="true"
+                                    aria-expanded="false"
                                     aria-controls="collapse{{session.id}}"
                                 >
                                     {{session.title}} <br />
@@ -200,11 +200,11 @@
                                 class="accordion-header d-flex justify-content-between align-items-center"
                             >
                                 <button
-                                    class="accordion-button"
+                                    class="accordion-button collapsed"
                                     type="button"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#collapse{{author.author_id}}"
-                                    aria-expanded="true"
+                                    aria-expanded="false"
                                     aria-controls="collapse{{author.author_id}}"
                                 >
                                     {{author.data.0.author_name}}

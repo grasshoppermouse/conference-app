@@ -10,6 +10,11 @@ const ASSETS = [
   "./bootstrap.min.css",
   "./star.svg",
   "./star-fill.svg",
+  "./x.svg",
+  "./person.svg",
+  "./calendar3.svg",
+  "./calendar.svg",
+  "./geo-alt.svg",
   // "./fonts/bootstrap-icons.woff",
   // "./fonts/bootstrap-icons.woff2",
 ];

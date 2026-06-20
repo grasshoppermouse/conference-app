@@ -236,7 +236,11 @@
                                             class="fav-btn"
                                             data-type="talk"
                                             data-id="{{talk.abstract}}"
+                                            data-time="{{talk.startdatetime}}"
+                                            data-location="{{talk.location}}"
+                                            data-title="{{talk.title}}"
                                             title="Favorite"
+                                            alt="Favorite"
                                         >
                                             <img
                                                 src="./star.svg"
@@ -589,40 +593,98 @@
                         name:
                             author.getAttribute("data-name") ||
                             "Unknown Author",
-                        // author.innerText
-                        //     .replace(/[\s\u00A0]+/g, " ")
-                        //     .trim() || "Unknown Author",
                     });
+                    // console.log(`Author ID found: ${author.author_id}`);
                 });
             });
 
-            // 2. Handle Search Input
+            // 1. Handle Input (Creates buttons with IDs embedded)
             searchInput.addEventListener("input", (e) => {
                 const query = e.target.value.toLowerCase();
                 searchResults.innerHTML = "";
 
                 if (query.length < 2) return;
 
-                const filtered = talkIndex.filter(
-                    (talk) =>
-                        talk.title.toLowerCase().includes(query) ||
-                        talk.abstract.toLowerCase().includes(query),
-                );
+                const isAuthorsView = document
+                    .getElementById("pills-authors")
+                    ?.classList.contains("active");
 
-                filtered.forEach((talk) => {
+                let results = [];
+                if (isAuthorsView) {
+                    results = authorIndex.filter((author) =>
+                        author.name.toLowerCase().includes(query),
+                    );
+                } else {
+                    results = talkIndex.filter(
+                        (talk) =>
+                            talk.title.toLowerCase().includes(query) ||
+                            talk.abstract.toLowerCase().includes(query),
+                    );
+                }
+
+                results.forEach((item) => {
                     const resultItem = document.createElement("button");
                     resultItem.className =
-                        "list-group-item list-group-item-action";
-                    resultItem.innerHTML = talk.title;
-                    // 5. Clicking on search result opens the modal
-                    resultItem.setAttribute("data-bs-toggle", "modal");
-                    resultItem.setAttribute(
-                        "data-bs-target",
-                        `#Modal${talk.id}`,
-                    );
+                        "list-group-item list-group-item-action d-flex justify-content-between align-items-center";
+
+                    // IMPORTANT: We store the ID and Type directly on the element
+                    // to avoid fragile string matching later.
+                    resultItem.dataset.targetId = item.id;
+                    resultItem.dataset.isAuthor = isAuthorsView
+                        ? "true"
+                        : "false";
+
+                    const label = isAuthorsView ? item.name : item.title;
+                    resultItem.innerHTML = `<span class="text-start">${label}</span>`;
+
                     searchResults.appendChild(resultItem);
                 });
             });
+
+            // 2. Handle Clicks (Delegation)
+            if (searchResults) {
+                searchResults.addEventListener("click", (e) => {
+                    const btn = e.target.closest("button");
+                    if (!btn || !searchResults.contains(btn)) return;
+
+                    console.log("SEARCH CLICK DETECTED!");
+
+                    const targetId = btn.dataset.targetId;
+                    const isAuthor = btn.dataset.isAuthor === "true";
+
+                    if (isAuthor) {
+                        const element = document.getElementById(
+                            `collapse${targetId}`,
+                        );
+                        if (element) {
+                            // 1. Trigger the expansion
+                            const bsCollapse =
+                                bootstrap.Collapse.getOrCreateInstance(
+                                    element,
+                                    { toggle: true },
+                                );
+                            bsCollapse.toggle();
+
+                            // 2. IMPORTANT: Wait for the animation to start/progress, then scroll
+                            setTimeout(() => {
+                                element.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "start", // Aligns the top of the accordion to the top of the viewport
+                                });
+                            }, 300); // 300ms matches Bootstrap's default transition speed
+                        } else {
+                            console.error(
+                                `Element #collapse${targetId} not found.`,
+                            );
+                        }
+                    } else {
+                        // Standard Modal behavior for talks remains unchanged
+                        btn.setAttribute("data-bs-toggle", "modal");
+                        btn.setAttribute("data-bs-target", `#Modal${targetId}`);
+                        btn.click();
+                    }
+                });
+            }
 
             // Close results when clicking outside (optional but recommended)
             // document.addEventListener("click", (e) => {

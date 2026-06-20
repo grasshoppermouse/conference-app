@@ -487,16 +487,15 @@
                         const data = item.data;
                         const div = document.createElement("div");
                         let content = ``;
+                        div.className = "card rounded-0";
                         if (type === "talk") {
-                            div.className = "card rounded-0";
                             div.setAttribute("role", "button");
                             div.setAttribute("tabindex", "0"); // Allows keyboard focusing
                             div.setAttribute("data-bs-toggle", "modal");
                             div.setAttribute("data-bs-target", `#Modal${id}`);
                             content = `<h6 class="mb-1 text-primary">${data.title}</h6>`;
                         } else {
-                            div.className = "card rounded-0 bg-info text-white";
-                            content = `<h6 class="mb-1 text-white">${data.title}</h6>`;
+                            content = `<h6 class="mb-1 text-success">${data.title}</h6>`;
                         }
 
                         let formattedTime = "";

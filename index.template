@@ -397,44 +397,59 @@
                 });
 
                 // Favorite button click logic
-                document.querySelectorAll(".fav-btn").forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        const id = btn.dataset.id;
-                        const type = btn.dataset.type;
-                        const key = `${type}:${id}`;
+                // Favorite button click logic (FIXED: Uses Event Delegation)
+                document.body.addEventListener("click", (e) => {
+                    // Find the closest favorite button element, even if an <img> inside it was clicked
+                    const btn = e.target.closest(".fav-btn");
+                    if (!btn) return;
 
-                        let labelText = "Favorite Item";
-                        if (btn.dataset.title) {
-                            labelText = btn.dataset.title;
-                        } else if (btn.parentElement.querySelector("button")) {
-                            labelText =
-                                btn.parentElement.querySelector(
-                                    "button",
-                                ).innerText;
-                        } else if (btn.closest(".d-flex")) {
-                            const otherBtn = btn
-                                .closest(".d-flex")
-                                .querySelector("button");
-                            if (otherBtn) labelText = otherBtn.innerText;
-                        }
-                        labelText = labelText.split("\n")[0];
-                        if (favorites[key]) {
-                            delete favorites[key];
-                        } else {
-                            favorites[key] = {
-                                title: labelText,
-                                time: btn.dataset.time || "", // Ensure we grab the ISO string from data-time attribute
-                                location: btn.dataset.location || "",
-                                timestamp: new Date().toLocaleString(),
-                            };
-                        }
+                    // Uncomment these if clicks on stars are triggering modal windows behind them
+                    // e.stopPropagation();
+                    // e.preventDefault();
 
-                        localStorage.setItem(
-                            "conference_favorites",
-                            JSON.stringify(favorites),
-                        );
-                        updateFavoriteIcons(type, id);
-                    });
+                    console.log("clicked dynamic button");
+                    const id = btn.dataset.id;
+                    const type = btn.dataset.type;
+                    const key = `${type}:${id}`;
+
+                    let labelText = "Favorite Item";
+                    if (btn.dataset.title) {
+                        labelText = btn.dataset.title;
+                    } else if (btn.parentElement.querySelector("button")) {
+                        labelText =
+                            btn.parentElement.querySelector("button").innerText;
+                    } else if (btn.closest(".d-flex")) {
+                        const otherBtn = btn
+                            .closest(".d-flex")
+                            .querySelector("button");
+                        if (otherBtn) labelText = otherBtn.innerText;
+                    }
+                    labelText = labelText.split("\n")[0];
+
+                    if (favorites[key]) {
+                        delete favorites[key];
+                    } else {
+                        favorites[key] = {
+                            title: labelText,
+                            time: btn.dataset.time || "",
+                            location: btn.dataset.location || "",
+                            timestamp: new Date().toLocaleString(),
+                        };
+                    }
+
+                    localStorage.setItem(
+                        "conference_favorites",
+                        JSON.stringify(favorites),
+                    );
+                    updateFavoriteIcons(type, id);
+
+                    // If the user is looking at the favorites tab and unfavorites an item,
+                    // refresh the list seamlessly so it disappears or updates in real time.
+                    const favsBtn =
+                        document.getElementById("btn-nav-favorites");
+                    if (favsBtn && favsBtn.classList.contains("active-nav")) {
+                        renderFavoritesList();
+                    }
                 });
 
                 // Navigation Listeners
@@ -485,7 +500,28 @@
                     favItems.forEach((item) => {
                         const [type, id] = item.key.split(":");
                         const data = item.data;
-                        const div = document.createElement("div");
+
+                        const isFav = !!favorites[`${type}:${id}`];
+                        const starImg = isFav
+                            ? "./star-fill.svg"
+                            : "./star.svg";
+
+                        const div0 = document.createElement("div"); // Parent div
+                        const div = document.createElement("div"); // Main talk/session div
+                        const favbuttoncrap = document.createElement("div"); // Favorite button div
+                        favbuttoncrap.innerHTML = `<button
+                            type="button"
+                            class="fav-btn ms-2"
+                            data-type="${type}"
+                            data-id="${id}"
+                            data-time="${data.time || ""}"
+                            data-location="${data.location || ""}"
+                            data-title="${data.title || ""}"
+                            title="Favorite"
+                        >
+                            <img src="${starImg}" alt="Favorite" />
+                        </button>`;
+
                         let content = ``;
                         div.className = "card rounded-0";
                         if (type === "talk") {
@@ -493,10 +529,9 @@
                             div.setAttribute("tabindex", "0"); // Allows keyboard focusing
                             div.setAttribute("data-bs-toggle", "modal");
                             div.setAttribute("data-bs-target", `#Modal${id}`);
-                            content = `<h6 class="mb-1 text-primary">${data.title}</h6>`;
-                        } else {
-                            content = `<h6 class="mb-1 text-success">${data.title}</h6>`;
                         }
+
+                        content += `<h6 class="${type === "talk" ? "mb-1 text-primary" : "mb-1 text-success"}">${data.title}</h6>`;
 
                         let formattedTime = "";
                         if (data.time) {
@@ -523,7 +558,10 @@
                         }
 
                         div.innerHTML = `<div class="card-body">${content}</div>`;
-                        listContainer.appendChild(div);
+
+                        div0.appendChild(div);
+                        div0.appendChild(favbuttoncrap);
+                        listContainer.appendChild(div0);
                     });
                 }
 

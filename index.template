@@ -396,6 +396,25 @@
                     updateFavoriteIcons(btn.dataset.type, btn.dataset.id);
                 });
 
+                const searchInput = document.getElementById("search-input");
+                const tabElements = document.querySelectorAll(
+                    'button[data-bs-toggle="pill"], a[data-bs-toggle="pill"]',
+                );
+
+                tabElements.forEach((tab) => {
+                    tab.addEventListener("shown.bs.tab", function (event) {
+                        // event.target is the newly activated tab element
+                        const activeTabId = event.target.id;
+
+                        if (activeTabId === "pills-authors-tab") {
+                            searchInput.placeholder = "Search authors...";
+                        } else {
+                            searchInput.placeholder =
+                                "Search talks by title or abstract...";
+                        }
+                    });
+                });
+
                 // Favorite button click logic
                 // Favorite button click logic (FIXED: Uses Event Delegation)
                 document.body.addEventListener("click", (e) => {
@@ -484,7 +503,7 @@
                         return;
                     }
 
-                    // Map to objects and Sort by Date
+                    // Map to objects and Sort by Date (FIXED: Case-sensitivity capitalization match)
                     let favItems = keys.map((key) => ({
                         key: key,
                         data: favorites[key],
@@ -497,46 +516,24 @@
                     });
 
                     listContainer.innerHTML = "";
+
                     favItems.forEach((item) => {
                         const [type, id] = item.key.split(":");
                         const data = item.data;
-
                         const isFav = !!favorites[`${type}:${id}`];
                         const starImg = isFav
                             ? "./star-fill.svg"
                             : "./star.svg";
 
-                        const div0 = document.createElement("div"); // Parent div
-                        const div = document.createElement("div"); // Main talk/session div
-                        const favbuttoncrap = document.createElement("div"); // Favorite button div
-                        favbuttoncrap.innerHTML = `<button
-                            type="button"
-                            class="fav-btn ms-2"
-                            data-type="${type}"
-                            data-id="${id}"
-                            data-time="${data.time || ""}"
-                            data-location="${data.location || ""}"
-                            data-title="${data.title || ""}"
-                            title="Favorite"
-                        >
-                            <img src="${starImg}" alt="Favorite" />
-                        </button>`;
+                        // 1. Create wrapper card structure
+                        const cardElement = document.createElement("div");
+                        cardElement.className = "card rounded-0 mb-3";
 
-                        let content = ``;
-                        div.className = "card rounded-0";
-                        if (type === "talk") {
-                            div.setAttribute("role", "button");
-                            div.setAttribute("tabindex", "0"); // Allows keyboard focusing
-                            div.setAttribute("data-bs-toggle", "modal");
-                            div.setAttribute("data-bs-target", `#Modal${id}`);
-                        }
-
-                        content += `<h6 class="${type === "talk" ? "mb-1 text-primary" : "mb-1 text-success"}">${data.title}</h6>`;
-
+                        let content = "";
                         let formattedTime = "";
+
                         if (data.time) {
                             const dateObj = new Date(data.time);
-                            // Format to: Monday, Oct 25 - 10:30 AM
                             formattedTime =
                                 dateObj.toLocaleDateString("en-US", {
                                     weekday: "long",
@@ -550,18 +547,48 @@
                                 });
                         }
 
+                        // Left Column Text
+                        content += `<div class="flex-grow-1 text-start">`;
+                        content += `  <h6 class="${type === "talk" ? "mb-1 text-primary" : "mb-1 text-success"}">${data.title}</h6>`;
                         if (data.time) {
-                            content += `<p class="mb-0 small"><img src="./calendar.svg" alt="Calendar" /> ${formattedTime}</p>`;
+                            content += `  <p class="mb-0 small text-muted"><img src="./calendar.svg" alt="Calendar" /> ${formattedTime}</p>`;
                         }
                         if (data.location) {
-                            content += `<p class="mb-0 small"><img src="./geo-alt.svg" alt="Location" /> ${data.location}</p>`;
+                            content += `  <p class="mb-0 small text-muted"><img src="./geo-alt.svg" alt="Location" /> ${data.location}</p>`;
+                        }
+                        content += `</div>`;
+
+                        // Right Column Button (FIXED: Flexbox layout keeps button perfectly right-aligned)
+                        content += `<div>`;
+                        content += `  <button type="button" class="fav-btn btn btn-link p-0 ms-3"
+                                    data-type="${type}"
+                                    data-id="${id}"
+                                    data-time="${data.time || ""}"
+                                    data-location="${data.location || ""}"
+                                    data-title="${data.title || ""}"
+                                    title="Favorite">
+                                    <img src="${starImg}" alt="Favorite" style="width: 24px; height: 24px;" />
+                                  </button>`;
+                        content += `</div>`;
+
+                        // 2. Put layout inside card-body
+                        const cardBody = document.createElement("div");
+                        cardBody.className =
+                            "card-body d-flex justify-content-between align-items-center";
+
+                        if (type === "talk") {
+                            cardBody.setAttribute("role", "button");
+                            cardBody.setAttribute("tabindex", "0");
+                            cardBody.setAttribute("data-bs-toggle", "modal");
+                            cardBody.setAttribute(
+                                "data-bs-target",
+                                `#Modal${id}`,
+                            );
                         }
 
-                        div.innerHTML = `<div class="card-body">${content}</div>`;
-
-                        div0.appendChild(div);
-                        div0.appendChild(favbuttoncrap);
-                        listContainer.appendChild(div0);
+                        cardBody.innerHTML = content;
+                        cardElement.appendChild(cardBody);
+                        listContainer.appendChild(cardElement);
                     });
                 }
 

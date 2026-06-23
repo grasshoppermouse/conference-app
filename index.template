@@ -36,6 +36,9 @@
             .pseudo-btn::before {
                 content: attr(data-time);
             }
+            .accordion-item {
+                scroll-margin-top: 15px; /* Adjust this value to give it a nice cushion at the top */
+            }
         </style>
     </head>
 
@@ -156,8 +159,14 @@
                                             type="button"
                                             class="btn btn-light text-start pseudo-btn"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#Modal{{talk.id}}"
+                                            data-bs-target="#globalTalkModal"
                                             data-time="{{talk.start_time}}. "
+                                            data-title="{{escape_html(talk.title)}}"
+                                            data-abstract="{{escape_html(talk.abstract)}}"
+                                            data-meta="{{talk.day}}, {{talk.start_time}}. {{talk.location}}"
+                                            data-id="{{talk.id}}"
+                                            data-location="{{talk.location}}"
+                                            data-datetime="{{talk.startdatetime}}"
                                         >
                                             {{talk.title}}
                                         </button>
@@ -198,7 +207,7 @@
                         <div
                             class="accordion-item"
                             data-id="{{author.author_id}}"
-                            data-name="{{author.data.0.author_name}}"
+                            data-name="{{author.name}}"
                         >
                             <h2
                                 class="accordion-header d-flex justify-content-between align-items-center"
@@ -211,7 +220,12 @@
                                     aria-expanded="false"
                                     aria-controls="collapse{{author.author_id}}"
                                 >
-                                    {{author.data.0.author_name}}
+                                    <div class="text-start">
+                                        <strong>{{author.name}}</strong><br />
+                                        <small class="text-muted fw-normal"
+                                            >{{author.affiliation}}</small
+                                        >
+                                    </div>
                                 </button>
                             </h2>
                             <div
@@ -222,23 +236,24 @@
                                 <div class="accordion-body">
                                     {% for talk in author.data -%}
                                     <div class="d-flex align-items-center mb-2">
-                                        <a
-                                            href="#"
-                                            class="btn btn-light text-start"
+                                        <button
+                                            type="button"
+                                            class="btn btn-light text-start author-talk-btn"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#Modal{{talk.abstract}}"
+                                            data-bs-target="#globalTalkModal"
+                                            data-id="{{talk.id}}"
                                         >
                                             {{talk.daytimelocation}}.
                                             <strong>{{talk.title}}</strong>
-                                        </a>
+                                        </button>
                                         <button
                                             type="button"
                                             class="fav-btn"
                                             data-type="talk"
-                                            data-id="{{talk.abstract}}"
-                                            data-time="{{talk.startdatetime}}"
-                                            data-location="{{talk.location}}"
-                                            data-title="{{talk.title}}"
+                                            data-id="{{talk.id}}"
+                                            data-time="{# talk.startdatetime #}"
+                                            data-location="{# talk.location #}"
+                                            data-title="{# talk.title #}"
                                             title="Favorite"
                                             alt="Favorite"
                                         >
@@ -293,13 +308,11 @@
 
         <!-- Global Modals Container -->
         <div id="global-modals">
-            {% for item in d -%} {% for session in item.data -%} {% for talk in
-            session.talk -%}
             <div
                 class="modal fade"
-                id="Modal{{talk.id}}"
+                id="globalTalkModal"
                 tabindex="-1"
-                aria-labelledby="Modal{{talk.id}}Label"
+                aria-labelledby="globalTalkModalLabel"
                 aria-hidden="true"
             >
                 <div class="modal-dialog modal-dialog-scrollable">
@@ -307,26 +320,18 @@
                         <div
                             class="modal-header d-flex justify-content-between align-items-center"
                         >
-                            <!-- Title hidden as requested, but keeping a space for layout -->
-                            <span
-                                >{{talk.day}}, {{talk.start_time}}.
-                                {{talk.location}}</span
-                            >
+                            <span id="modal-talk-meta"></span>
                             <div class="d-flex align-items-center gap-3">
-                                <!-- Favorite Button -->
                                 <button
                                     type="button"
+                                    id="modal-fav-btn"
                                     class="fav-btn"
                                     data-type="talk"
-                                    data-id="{{talk.id}}"
-                                    data-time="{{talk.startdatetime}}"
-                                    data-location="{{talk.location}}"
-                                    data-title="{{talk.title}}"
+                                    data-id=""
                                     title="Favorite"
                                 >
                                     <img src="./star.svg" alt="Favorite" />
                                 </button>
-                                <!-- Close Button -->
                                 <button
                                     type="button"
                                     class="btn-close"
@@ -335,7 +340,7 @@
                                 ></button>
                             </div>
                         </div>
-                        <div class="modal-body">{{talk.abstract}}</div>
+                        <div class="modal-body" id="modal-talk-abstract"></div>
                         <div class="modal-footer">
                             <button
                                 type="button"
@@ -348,12 +353,42 @@
                     </div>
                 </div>
             </div>
-            {% endfor -%} {% endfor -%} {% endfor -%}
         </div>
 
         <script src="bootstrap.bundle.min.js"></script>
 
         <script>
+            // // From Gemini
+            // const globalModal = document.getElementById("globalTalkModal");
+            // globalModal.addEventListener("show.bs.modal", function (event) {
+            //     // Button that triggered the modal
+            //     const button = event.relatedTarget;
+
+            //     // Extract info from data-* attributes
+            //     const title = button.getAttribute("data-title");
+            //     const abstract = button.getAttribute("data-abstract");
+            //     const meta = button.getAttribute("data-meta");
+            //     const id = button.getAttribute("data-id");
+            //     const datetime = button.getAttribute("data-datetime");
+            //     const location = button.getAttribute("data-location");
+
+            //     // Update the modal's content
+            //     document.getElementById("modal-talk-meta").textContent = meta;
+            //     document.getElementById("modal-talk-abstract").innerHTML =
+            //         abstract;
+
+            //     // Update the favorite button inside the modal dynamically
+            //     const favBtn = document.getElementById("modal-fav-btn");
+            //     favBtn.setAttribute("data-id", id);
+            //     favBtn.setAttribute("data-time", datetime);
+            //     favBtn.setAttribute("data-location", location);
+            //     favBtn.setAttribute("data-title", title);
+
+            //     // Trigger your icon state sync function
+            //     updateFavoriteIcons("talk", id);
+            // });
+            // // END Gemini
+
             // Helper function to handle active state toggling
             function setActiveNav(btnId) {
                 const scheduleBtn = document.getElementById("btn-nav-schedule");
@@ -369,27 +404,8 @@
             }
 
             document.addEventListener("DOMContentLoaded", () => {
-                const favorites = JSON.parse(
-                    localStorage.getItem("conference_favorites") || "{}",
-                );
                 const mainContent = document.getElementById("app-main-content");
                 const favsZone = document.getElementById("app-favorites-view");
-
-                function updateFavoriteIcons(type, id) {
-                    const key = `${type}:${id}`;
-                    const isFav = !!favorites[key];
-                    const buttons = document.querySelectorAll(
-                        `.fav-btn[data-type="${type}"][data-id="${id}"]`,
-                    );
-                    buttons.forEach((btn) => {
-                        const img = btn.querySelector("img");
-                        if (isFav) {
-                            img.src = "./star-fill.svg";
-                        } else {
-                            img.src = "./star.svg";
-                        }
-                    });
-                }
 
                 // Initial render of favorite icons
                 document.querySelectorAll(".fav-btn").forEach((btn) => {
@@ -548,8 +564,10 @@
                         }
 
                         // Left Column Text
-                        content += `<div class="flex-grow-1 text-start">`;
+                        let modalAttributes = type === "talk" ? `role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#globalTalkModal" data-id="${id}"` : "";
+                        content += `<div class="flex-grow-1 text-start" ${modalAttributes}>`;
                         content += `  <h6 class="${type === "talk" ? "mb-1 text-primary" : "mb-1 text-success"}">${data.title}</h6>`;
+
                         if (data.time) {
                             content += `  <p class="mb-0 small text-muted"><img src="./calendar.svg" alt="Calendar" /> ${formattedTime}</p>`;
                         }
@@ -576,16 +594,6 @@
                         cardBody.className =
                             "card-body d-flex justify-content-between align-items-center";
 
-                        if (type === "talk") {
-                            cardBody.setAttribute("role", "button");
-                            cardBody.setAttribute("tabindex", "0");
-                            cardBody.setAttribute("data-bs-toggle", "modal");
-                            cardBody.setAttribute(
-                                "data-bs-target",
-                                `#Modal${id}`,
-                            );
-                        }
-
                         cardBody.innerHTML = content;
                         cardElement.appendChild(cardBody);
                         listContainer.appendChild(cardElement);
@@ -603,152 +611,193 @@
             // --- Search Functionality ---
             const searchInput = document.getElementById("search-input");
             const searchResults = document.getElementById("search-results");
-            let talkIndex = [];
-            let authorIndex = [];
+            let talkIndex = {{talks}};
+            let authorIndex = {{authors}};
 
-            // 1. Build talkIndex on Load
-            // Iterates through all modal elements generated by the template engine to build the search index
-            document.addEventListener("DOMContentLoaded", () => {
-                const modals = document.querySelectorAll(
-                    "#global-modals .modal",
+            const favorites = JSON.parse(
+                localStorage.getItem("conference_favorites") || "{}",
+            );
+
+            function updateFavoriteIcons(type, id) {
+                const key = `${type}:${id}`;
+                const isFav = !!favorites[key];
+                const buttons = document.querySelectorAll(
+                    `.fav-btn[data-type="${type}"][data-id="${id}"]`,
                 );
-                modals.forEach((modal) => {
-                    const idMatch = modal.id.match(/Modal(\d+)/);
-                    if (idMatch) {
-                        const id = idMatch[1];
-                        // Find the talk title from the modal content or headers if needed,
-                        // but since we have buttons with titles and the structure is known:
-                        const abstractText =
-                            modal.querySelector(".modal-body").innerText;
-                        // We can find the title by looking at the button that triggers this modal
-                        // or searching for common patterns in the modal's initial structure
-                        const titleElement =
-                            modal.parentElement.previousElementSibling
-                                ?.innerHTML || "";
-
-                        // A more robust way is to look for the button that has a data-bs-target matching this modal's ID
-                        const triggerBtn = document.querySelector(
-                            `[data-bs-target="#Modal${id}"]`,
-                        );
-                        const title = triggerBtn
-                            ? triggerBtn.innerText
-                                  .replace(/\n/g, "")
-                                  .split(". ")[0]
-                            : "Untitled Talk";
-
-                        talkIndex.push({
-                            id: id,
-                            title: title,
-                            abstract: abstractText || "",
-                        });
-                    }
-                });
-            });
-
-            // Build Author Index
-            document.addEventListener("DOMContentLoaded", () => {
-                const authors = document.querySelectorAll(
-                    "#pills-authors .accordion-item",
-                );
-
-                authors.forEach((author) => {
-                    authorIndex.push({
-                        id: author.getAttribute("data-id"),
-                        name:
-                            author.getAttribute("data-name") ||
-                            "Unknown Author",
-                    });
-                    // console.log(`Author ID found: ${author.author_id}`);
-                });
-            });
-
-            // 1. Handle Input (Creates buttons with IDs embedded)
-            searchInput.addEventListener("input", (e) => {
-                const query = e.target.value.toLowerCase();
-                searchResults.innerHTML = "";
-
-                if (query.length < 2) return;
-
-                const isAuthorsView = document
-                    .getElementById("pills-authors")
-                    ?.classList.contains("active");
-
-                let results = [];
-                if (isAuthorsView) {
-                    results = authorIndex.filter((author) =>
-                        author.name.toLowerCase().includes(query),
-                    );
-                } else {
-                    results = talkIndex.filter(
-                        (talk) =>
-                            talk.title.toLowerCase().includes(query) ||
-                            talk.abstract.toLowerCase().includes(query),
-                    );
-                }
-
-                results.forEach((item) => {
-                    const resultItem = document.createElement("button");
-                    resultItem.className =
-                        "list-group-item list-group-item-action d-flex justify-content-between align-items-center";
-
-                    // IMPORTANT: We store the ID and Type directly on the element
-                    // to avoid fragile string matching later.
-                    resultItem.dataset.targetId = item.id;
-                    resultItem.dataset.isAuthor = isAuthorsView
-                        ? "true"
-                        : "false";
-
-                    const label = isAuthorsView ? item.name : item.title;
-                    resultItem.innerHTML = `<span class="text-start">${label}</span>`;
-
-                    searchResults.appendChild(resultItem);
-                });
-            });
-
-            // 2. Handle Clicks (Delegation)
-            if (searchResults) {
-                searchResults.addEventListener("click", (e) => {
-                    const btn = e.target.closest("button");
-                    if (!btn || !searchResults.contains(btn)) return;
-
-                    console.log("SEARCH CLICK DETECTED!");
-
-                    const targetId = btn.dataset.targetId;
-                    const isAuthor = btn.dataset.isAuthor === "true";
-
-                    if (isAuthor) {
-                        const element = document.getElementById(
-                            `collapse${targetId}`,
-                        );
-                        if (element) {
-                            // 1. Trigger the expansion
-                            const bsCollapse =
-                                bootstrap.Collapse.getOrCreateInstance(
-                                    element,
-                                    { toggle: true },
-                                );
-                            bsCollapse.toggle();
-
-                            // 2. IMPORTANT: Wait for the animation to start/progress, then scroll
-                            setTimeout(() => {
-                                element.scrollIntoView({
-                                    behavior: "smooth",
-                                    block: "start", // Aligns the top of the accordion to the top of the viewport
-                                });
-                            }, 300); // 300ms matches Bootstrap's default transition speed
-                        } else {
-                            console.error(
-                                `Element #collapse${targetId} not found.`,
-                            );
-                        }
+                buttons.forEach((btn) => {
+                    const img = btn.querySelector("img");
+                    if (isFav) {
+                        img.src = "./star-fill.svg";
                     } else {
-                        // Standard Modal behavior for talks remains unchanged
-                        btn.setAttribute("data-bs-toggle", "modal");
-                        btn.setAttribute("data-bs-target", `#Modal${targetId}`);
-                        btn.click();
+                        img.src = "./star.svg";
                     }
                 });
             }
+
+            // 1. Build talkIndex on Load
+            // Iterates through all modal elements generated by the template engine to build the search index
+            // document.addEventListener("DOMContentLoaded", () => {
+            //     const modals = document.querySelectorAll(
+            //         "#global-modals .modal",
+            //     );
+            //     modals.forEach((modal) => {
+            //         const idMatch = modal.id.match(/Modal(\d+)/);
+            //         if (idMatch) {
+            //             const id = idMatch[1];
+            //             // Find the talk title from the modal content or headers if needed,
+            //             // but since we have buttons with titles and the structure is known:
+            //             const abstractText =
+            //                 modal.querySelector(".modal-body").innerText;
+            //             // We can find the title by looking at the button that triggers this modal
+            //             // or searching for common patterns in the modal's initial structure
+            //             const titleElement =
+            //                 modal.parentElement.previousElementSibling
+            //                     ?.innerHTML || "";
+
+            //             // A more robust way is to look for the button that has a data-bs-target matching this modal's ID
+            //             const triggerBtn = document.querySelector(
+            //                 `[data-bs-target="#Modal${id}"]`,
+            //             );
+            //             const title = triggerBtn
+            //                 ? triggerBtn.innerText
+            //                       .replace(/\n/g, "")
+            //                       .split(". ")[0]
+            //                 : "Untitled Talk";
+
+            //             talkIndex.push({
+            //                 id: id,
+            //                 title: title,
+            //                 abstract: abstractText || "",
+            //             });
+            //         }
+            //     });
+            // });
+
+            // 1. Handle Input (Creates buttons with IDs embedded)
+            // 1. Direct injection from Python. Runs instantly on script load!
+
+            document.addEventListener("DOMContentLoaded", () => {
+                // Keep your existing favorites setup and navigation code...
+
+                // 2. Dynamic Modal Population Listener
+                const globalModal = document.getElementById('globalTalkModal');
+                if (globalModal) {
+                    globalModal.addEventListener('show.bs.modal', function (event) {
+                        const button = event.relatedTarget; // Element that triggered the modal
+                        const id = button.getAttribute('data-id');
+
+                        // 1. Look up the full talk details from your Python-injected talkIndex
+                        // (Using == allows it to match even if one is a string and the other is an integer)
+                        const talkData = talkIndex.find(t => t.id == id);
+
+                        const metaNode = document.getElementById('modal-talk-meta');
+                        const abstractNode = document.getElementById('modal-talk-abstract');
+                        const modalFavBtn = document.getElementById('modal-fav-btn');
+
+                        if (talkData) {
+                            // 2. Populate from the dictionary index
+                            metaNode.textContent = `${talkData.day || ''}, ${talkData.start_time || ''}. ${talkData.location || ''}`;
+                            abstractNode.innerHTML = talkData.abstract || "<p>Abstract not provided.</p>";
+
+                            // Sync the action button
+                            modalFavBtn.setAttribute('data-id', talkData.id);
+                            modalFavBtn.setAttribute('data-title', talkData.title);
+                            modalFavBtn.setAttribute('data-time', talkData.startdatetime || '');
+                            modalFavBtn.setAttribute('data-location', talkData.location || '');
+                        } else {
+                            // 3. Graceful fallback for Schedule View buttons that still use data-* attributes
+                            metaNode.textContent = button.getAttribute('data-meta') || "";
+                            abstractNode.innerHTML = button.getAttribute('data-abstract') || "<p>Abstract not found.</p>";
+
+                            modalFavBtn.setAttribute('data-id', id);
+                            modalFavBtn.setAttribute('data-title', button.getAttribute('data-title') || "");
+                            modalFavBtn.setAttribute('data-time', button.getAttribute('data-time') || button.getAttribute('data-datetime') || "");
+                            modalFavBtn.setAttribute('data-location', button.getAttribute('data-location') || "");
+                        }
+
+                        // 4. Update the visual filled/empty star state
+                        updateFavoriteIcons('talk', id);
+                    });
+                }
+
+                // 3. Cleaned-Up Search Execution
+                const searchInput = document.getElementById("search-input");
+                const searchResults = document.getElementById("search-results");
+
+                searchInput.addEventListener("input", (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    searchResults.innerHTML = "";
+
+                    if (query.length < 2) return;
+
+                    const isAuthorsView = document.getElementById("pills-authors")?.classList.contains("active");
+                    let results = [];
+
+                    if (isAuthorsView) {
+                        // Safe check for author names
+                        results = authorIndex.filter(author =>
+                            author.name && author.name.toLowerCase().includes(query)
+                        );
+                    } else {
+                        // FIX: Added abstract search & safe string conversions to prevent integer method crashes
+                        results = talkIndex.filter(talk =>
+                            (talk.title && talk.title.toLowerCase().includes(query)) ||
+                            (talk.abstract && talk.abstract.toLowerCase().includes(query)) ||
+                            (talk.id && talk.id.toString().toLowerCase().includes(query))
+                        );
+                    }
+
+                    results.forEach((item) => {
+                        const resultItem = document.createElement("button");
+                        resultItem.className = "list-group-item list-group-item-action d-flex justify-content-between align-items-center";
+
+                        // Ensure authors use author_id and talks use standard id
+                        resultItem.dataset.targetId = item.author_id || item.id;
+                        resultItem.dataset.isAuthor = isAuthorsView ? "true" : "false";
+
+                        if (isAuthorsView) {
+                            resultItem.innerHTML = `<span class="text-start">${item.name}</span>`;
+                        } else {
+                            resultItem.innerHTML = `<span class="text-start">${item.title}</span>`;
+                        }
+                        searchResults.appendChild(resultItem);
+                    });
+                });
+
+                // 4. Handle Search Result Selection (Fixed to match our new global modal framework)
+                if (searchResults) {
+                    searchResults.addEventListener("click", (e) => {
+                        const btn = e.target.closest("button");
+                        if (!btn || !searchResults.contains(btn)) return;
+
+                        const targetId = btn.dataset.targetId;
+                        const isAuthor = btn.dataset.isAuthor === "true";
+
+                        if (isAuthor) {
+                            const element = document.getElementById(`collapse${targetId}`);
+                            if (element) {
+                                bootstrap.Collapse.getOrCreateInstance(element, { toggle: false }).show();
+                                setTimeout(() => {
+                                            // Target the parent accordion item so the header stays visible!
+                                            const accordionItem = element.closest('.accordion-item');
+                                            if (accordionItem) {
+                                                accordionItem.scrollIntoView({ behavior: "smooth", block: "start" });
+                                            }
+                                        }, 300);
+                            }
+                        } else {
+                            // Find the original schedule or author list button matching this talk ID
+                            // to borrow its dataset payload for the global modal setup
+                            const originalBtn = document.querySelector(`button[data-id="${targetId}"][data-bs-target="#globalTalkModal"]`);
+                            if (originalBtn) {
+                                const modalInstance = bootstrap.Modal.getOrCreateInstance(globalModal);
+                                // Pass the original element as the relatedTarget so the event listener triggers cleanly
+                                modalInstance.show(originalBtn);
+                            }
+                        }
+                    });
+                }
+            });
 
             // Close results when clicking outside (optional but recommended)
             // document.addEventListener("click", (e) => {

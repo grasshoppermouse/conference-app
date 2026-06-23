@@ -37,7 +37,7 @@
                 content: attr(data-time);
             }
             .accordion-item {
-                scroll-margin-top: 15px; /* Adjust this value to give it a nice cushion at the top */
+                scroll-margin-top: 240px; /* Adjust this value to give it a nice cushion at the top */
             }
         </style>
     </head>
@@ -45,68 +45,70 @@
     <body class="pb-70">
         <!-- Main Content View -->
         <div id="app-main-content" class="container-fluid">
-            <h3 class="mb-4">HBES 2027</h3>
-            <div class="mb-4">
-                <div class="input-group mb-4">
-                    <input
-                        type="text"
-                        id="search-input"
-                        class="form-control form-control-lg"
-                        placeholder="Search talks by title or abstract..."
-                        autocomplete="off"
-                    />
-                    <button
-                        class="btn btn-outline-secondary"
-                        type="button"
-                        id="clear-search"
-                        onclick="
-                            searchInput.value = '';
-                            searchResults.innerHTML = '';
-                            searchInput.dispatchEvent(new Event('input'));
-                        "
-                    >
-                        <img src="./x.svg" alt="X" />
-                    </button>
+            <!-- START OF STICKY HEADER CONTAINER -->
+            <div
+                class="sticky-top bg-white pt-3 pb-2 mb-3 border-bottom"
+                style="top: 0; z-index: 1020"
+            >
+                <h3 class="mb-3">HBES 2027</h3>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input
+                            type="text"
+                            id="search-input"
+                            class="form-control form-control-lg"
+                            placeholder="Search talks by title or abstract..."
+                            autocomplete="off"
+                        />
+                        <!-- FIXED: Removed inline onclick placeholder -->
+                        <button
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            id="clear-search"
+                        >
+                            <img src="./x.svg" alt="X" />
+                        </button>
+                    </div>
+                    <div
+                        id="search-results"
+                        class="list-group mt-2"
+                        style="max-height: 300px; overflow-y: auto"
+                    ></div>
                 </div>
-                <div
-                    id="search-results"
-                    class="list-group mt-2"
-                    style="max-height: 300px; overflow-y: auto"
-                ></div>
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    {% for item in d -%}
+                    <li class="nav-item" role="presentation">
+                        <button
+                            class="nav-link"
+                            id="pills-{{item.day}}-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#pills-{{item.day}}"
+                            type="button"
+                            role="tab"
+                            aria-controls="pills-{{item.day}}"
+                            aria-selected="true"
+                        >
+                            {{item.day}}
+                        </button>
+                    </li>
+                    {% endfor -%}
+                    <li class="nav-item ms-auto" role="presentation">
+                        <button
+                            class="nav-link"
+                            id="pills-authors-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#pills-authors"
+                            type="button"
+                            role="tab"
+                            aria-controls="pills-authors"
+                            aria-selected="false"
+                        >
+                            <img src="./person.svg" alt="Person" />
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                {% for item in d -%}
-                <li class="nav-item" role="presentation">
-                    <button
-                        class="nav-link"
-                        id="pills-{{item.day}}-tab"
-                        data-bs-toggle="pill"
-                        data-bs-target="#pills-{{item.day}}"
-                        type="button"
-                        role="tab"
-                        aria-controls="pills-{{item.day}}"
-                        aria-selected="true"
-                    >
-                        {{item.day}}
-                    </button>
-                </li>
-                {% endfor -%}
-                <li class="nav-item ms-auto" role="presentation">
-                    <button
-                        class="nav-link"
-                        id="pills-authors-tab"
-                        data-bs-toggle="pill"
-                        data-bs-target="#pills-authors"
-                        type="button"
-                        role="tab"
-                        aria-controls="pills-authors"
-                        aria-selected="false"
-                    >
-                        <img src="./person.svg" alt="Person" />
-                        <!--<div style="font-size: 10px">Authors</div>-->
-                    </button>
-                </li>
-            </ul>
+            <!-- END OF STICKY HEADER CONTAINER -->
 
             <div class="tab-content" id="pills-tabContent">
                 <!-- Schedule View -->
@@ -794,6 +796,23 @@
                                 // Pass the original element as the relatedTarget so the event listener triggers cleanly
                                 modalInstance.show(originalBtn);
                             }
+                        }
+                    });
+                }
+                // Handle Search Clearing
+                const clearSearchBtn = document.getElementById("clear-search");
+                if (clearSearchBtn) {
+                    clearSearchBtn.addEventListener("click", () => {
+                        const input = document.getElementById("search-input");
+                        const results = document.getElementById("search-results");
+
+                        if (input) {
+                            input.value = "";
+                            // Dispatches an input event so the list filters back to empty automatically
+                            input.dispatchEvent(new Event("input"));
+                        }
+                        if (results) {
+                            results.innerHTML = "";
                         }
                     });
                 }

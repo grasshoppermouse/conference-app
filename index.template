@@ -150,39 +150,12 @@
             <div class="tab-pane fade" id="pills-authors" role="tabpanel" aria-labelledby="pills-authors-tab"
                 tabindex="0">
                 <div class="accordion" id="accordion-authors">
-                    {% for author in authors -%}
-                    <div class="accordion-item" data-id="{{author.author_id}}" data-name="{{author.name}}">
-                        <h2 class="accordion-header d-flex justify-content-between align-items-center">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{author.author_id}}" aria-expanded="false"
-                                aria-controls="collapse{{author.author_id}}">
-                                <div class="text-start">
-                                    <strong>{{author.name}}</strong><br />
-                                    <small class="text-muted fw-normal">{{author.affiliation}}</small>
-                                </div>
-                            </button>
-                        </h2>
-                        <div id="collapse{{author.author_id}}" class="accordion-collapse collapse"
-                            data-bs-parent="#accordion-authors">
-                            <div class="accordion-body">
-                                {% for talk in author.data -%}
-                                <div class="d-flex align-items-center mb-2">
-                                    <button type="button" class="btn btn-light text-start author-talk-btn"
-                                        data-bs-toggle="modal" data-bs-target="#globalTalkModal" data-id="{{talk.id}}">
-                                        {{talk.daytimelocation}}.
-                                        <strong>{{talk.title}}</strong>
-                                    </button>
-                                    <button type="button" class="fav-btn" data-type="talk" data-id="{{talk.id}}"
-                                        data-time="{# talk.startdatetime #}" data-location="{# talk.location #}"
-                                        data-title="{# talk.title #}" title="Favorite" alt="Favorite">
-                                        <img src="./star.svg" alt="Favorite" />
-                                    </button>
-                                </div>
-                                {% endfor -%}
-                            </div>
+                    <!-- Dynamic Loader Placeholder -->
+                    <div class="text-center py-5" id="authors-tab-loader">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="visually-hidden">Loading authors...</span>
                         </div>
                     </div>
-                    {% endfor -%}
                 </div>
             </div>
         </div>
@@ -269,11 +242,12 @@
 
             tabElements.forEach((tab) => {
                 tab.addEventListener("shown.bs.tab", function (event) {
-                    // event.target is the newly activated tab element
                     const activeTabId = event.target.id;
 
                     if (activeTabId === "pills-authors-tab") {
                         searchInput.placeholder = "Search authors...";
+                        // NEW: Initialize author headers on demand
+                        renderAuthorsSkeleton();
                     } else {
                         searchInput.placeholder =
                             "Search talks by title or abstract...";
@@ -460,6 +434,93 @@
         let talkIndex = {{ talks }};
         let authorIndex = {{ authors }};
 
+        // --- High-Performance On-Demand Rendering Engine ---
+        let authorsRendered = false;
+
+        function renderAuthorsSkeleton() {
+            // Prevent reconstructing the DOM if it's already generated
+            if (authorsRendered) return;
+            const container = document.getElementById("accordion-authors");
+            if (!container) return;
+
+            const fragment = document.createDocumentFragment();
+
+            authorIndex.forEach((author) => {
+                const item = document.createElement("div");
+                item.className = "accordion-item";
+                item.setAttribute("id", `author-row-${author.author_id}`);
+                item.setAttribute("data-id", author.author_id);
+                item.setAttribute("data-name", author.name);
+
+                item.innerHTML = `
+                    <h2 class="accordion-header d-flex justify-content-between align-items-center">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse${author.author_id}" aria-expanded="false"
+                            aria-controls="collapse${author.author_id}" data-author-id="${author.author_id}">
+                            <div class="text-start">
+                                <strong>${author.name}</strong><br />
+                                <small class="text-muted fw-normal">${author.affiliation || ''}</small>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapse${author.author_id}" class="accordion-collapse collapse"
+                        data-bs-parent="#accordion-authors">
+                        <div class="accordion-body" id="author-body-${author.author_id}">
+                            <div class="text-center py-2">
+                                <div class="spinner-border spinner-border-sm text-muted" role="status"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                fragment.appendChild(item);
+            });
+
+            // Wipe out the loading spinner and append the optimized structure in a single layout pass
+            container.innerHTML = "";
+            container.appendChild(fragment);
+            authorsRendered = true;
+        }
+
+        // Lazy-load inner data only when an accordion item expands
+        document.getElementById("accordion-authors").addEventListener("show.bs.collapse", (e) => {
+            const button = e.target.previousElementSibling?.querySelector(".accordion-button");
+            if (!button) return;
+
+            const authorId = button.getAttribute("data-author-id");
+            const bodyZone = document.getElementById(`author-body-${authorId}`);
+
+            // Only generate inner HTML if the spinner placeholder is still visible
+            if (bodyZone && bodyZone.querySelector(".spinner-border")) {
+                const author = authorIndex.find(a => a.author_id == authorId);
+                if (!author || !author.data || author.data.length === 0) {
+                    bodyZone.innerHTML = '<p class="text-muted small mb-0">No sessions listed.</p>';
+                    return;
+                }
+
+                let html = "";
+                author.data.forEach((talk) => {
+                    html += `
+                        <div class="d-flex align-items-center mb-2">
+                            <button type="button" class="btn btn-light text-start author-talk-btn"
+                                data-bs-toggle="modal" data-bs-target="#globalTalkModal" data-id="${talk.id}">
+                                ${talk.daytimelocation}. <strong>${talk.title}</strong>
+                            </button>
+                            <button type="button" class="fav-btn" data-type="talk" data-id="${talk.id}" title="Favorite">
+                                <img src="./star.svg" alt="Favorite" />
+                            </button>
+                        </div>
+                    `;
+                });
+
+                bodyZone.innerHTML = html;
+
+                // Dynamically sync favorite filled/empty star icon states
+                author.data.forEach((talk) => {
+                    updateFavoriteIcons("talk", talk.id);
+                });
+            }
+        });
+
         const favorites = JSON.parse(
             localStorage.getItem("conference_favorites") || "{}",
         );
@@ -487,13 +548,11 @@
             const globalModal = document.getElementById('globalTalkModal');
             if (globalModal) {
                 globalModal.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget; // Element that triggered the modal
-                    const id = button.getAttribute('data-id');
+                    const button = event.relatedTarget;
+                    // Fallback to a modal dataset attribute if triggered directly from a search match
+                    const id = button ? button.getAttribute('data-id') : globalModal.dataset.activeTalkId;
 
-                    // 1. Look up the full talk details from your Python-injected talkIndex
-                    // (Using == allows it to match even if one is a string and the other is an integer)
                     const talkData = talkIndex.find(t => t.id == id);
-
                     const metaNode = document.getElementById('modal-talk-meta');
                     const abstractNode = document.getElementById('modal-talk-abstract');
                     const modalFavBtn = document.getElementById('modal-fav-btn');
@@ -590,13 +649,16 @@
                             }, 300);
                         }
                     } else {
-                        // Find the original schedule or author list button matching this talk ID
-                        // to borrow its dataset payload for the global modal setup
+                        // Attempt to locate a matching button in the active schedule DOM view
                         const originalBtn = document.querySelector(`button[data-id="${targetId}"][data-bs-target="#globalTalkModal"]`);
+                        const modalInstance = bootstrap.Modal.getOrCreateInstance(globalModal);
+
                         if (originalBtn) {
-                            const modalInstance = bootstrap.Modal.getOrCreateInstance(globalModal);
-                            // Pass the original element as the relatedTarget so the event listener triggers cleanly
                             modalInstance.show(originalBtn);
+                        } else {
+                            // Safe fallback: Launch the modal directly using the JSON index reference
+                            globalModal.dataset.activeTalkId = targetId;
+                            modalInstance.show();
                         }
                     }
                 });

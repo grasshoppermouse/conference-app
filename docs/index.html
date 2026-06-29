@@ -55,6 +55,10 @@
                 /* Adjust this value to give it a nice cushion at the top */
             }
         </style>
+        <script
+            src="https://unpkg.com/html5-qrcode"
+            type="text/javascript"
+        ></script>
     </head>
 
     <body class="pb-70">
@@ -75,7 +79,15 @@
                             placeholder="Search talks by title or abstract..."
                             autocomplete="off"
                         />
-                        <!-- FIXED: Removed inline onclick placeholder -->
+                        <!-- QR Code Scan Trigger Button -->
+                        <button
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            id="btn-scan-qr"
+                            title="Scan Badge QR"
+                        >
+                            <i class="bi bi-qr-code-scan"></i>
+                        </button>
                         <button
                             class="btn btn-outline-secondary"
                             type="button"
@@ -45544,7 +45556,30 @@
                 </div>
             </div>
         </div>
-
+        <div
+            class="modal fade"
+            id="qrScannerModal"
+            tabindex="-1"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Scan Participant Badge</h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body bg-dark p-0 position-relative">
+                        <!-- Camera view area -->
+                        <div id="qr-video-reader" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script src="bootstrap.bundle.min.js"></script>
 
         <script>
@@ -46150,6 +46185,54 @@
                     console.error("Invalid badge URL configuration structure detected.", e);
                 }
             }
+
+            let html5QrScanner = null;
+
+            document.getElementById('btn-scan-qr').addEventListener('click', () => {
+                const scannerModal = new bootstrap.Modal(document.getElementById('qrScannerModal'));
+                scannerModal.show();
+            });
+
+            // Initialize camera engine when the modal opens
+            document.getElementById('qrScannerModal').addEventListener('shown.bs.modal', () => {
+                html5QrScanner = new Html5Qrcode("qr-video-reader");
+
+                const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+                html5QrScanner.start(
+                    { facingMode: "environment" }, // Prioritizes rear phone camera
+                    config,
+                    (decodedText) => {
+                        // SUCCESS HANDLER: Extract the hashed string
+                        try {
+                            // Handle absolute deep-links gracefully
+                            const url = decodedText.includes('#') ? new URL(decodedText) : null;
+                            const hashValue = url ? url.hash : decodedText;
+
+                            if (hashValue && hashValue.startsWith('#/')) {
+                                // Stop streaming camera tracking feed
+                                html5QrScanner.stop().then(() => {
+                                    bootstrap.Modal.getInstance(document.getElementById('qrScannerModal')).hide();
+                                    // Push hash directly to browser; our new routing engine handles the rest!
+                                    window.location.hash = hashValue;
+                                });
+                            }
+                        } catch (err) {
+                            console.error("Malformed QR data asset structure payload parsed.", err);
+                        }
+                    },
+                    (errorMessage) => {
+                        // Silent verbose log hook; suppresses standard frame parsing misses
+                    }
+                ).catch(err => console.error("Camera access failed or rejected by system settings.", err));
+            });
+
+            // Terminate camera streams gracefully if the user manually closes the scanning view modal
+            document.getElementById('qrScannerModal').addEventListener('hide.bs.modal', () => {
+                if (html5QrScanner && html5QrScanner.isScanning) {
+                    html5QrScanner.stop().catch(err => console.error("Error killing video track context.", err));
+                }
+            });
         </script>
     </body>
 </html>

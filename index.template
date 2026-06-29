@@ -660,6 +660,11 @@
                         // Fallback to a modal dataset attribute if triggered directly from a search match
                         const id = button ? button.getAttribute('data-id') : globalModal.dataset.activeTalkId;
 
+                        // PUSH STATE TO URL: Update hash cleanly if it's not already pointing there
+                        if (id && window.location.hash !== `#/talk/${id}`) {
+                            window.location.hash = `#/talk/${id}`;
+                        }
+
                         const talkData = talkIndex.find(t => t.id == id);
                         const metaNode = document.getElementById('modal-talk-meta');
                         const abstractNode = document.getElementById('modal-talk-abstract');
@@ -688,6 +693,13 @@
 
                         // 4. Update the visual filled/empty star state
                         updateFavoriteIcons('talk', id);
+                    });
+
+                    // NEW: Clear hash reference when closing the modal window
+                    globalModal.addEventListener('hide.bs.modal', function () {
+                        if (window.location.hash.startsWith('#/talk/')) {
+                            window.location.hash = '';
+                        }
                     });
                 }
 
@@ -796,6 +808,121 @@
             //         searchResults.innerHTML = "";
             //     }
             // });
+
+            // 1. Central Router: Sync URL Hash changes to the UI views
+            function handleRouting() {
+                const hash = window.location.hash;
+                if (!hash) return;
+
+                const parts = hash.split('/');
+                if (parts.length < 3) return;
+
+                const routeType = parts[1]; // 'talk', 'session', or 'author'
+                const id = parts[2];
+
+                // Ensure the main schedule container is visible (if coming from Favorites view)
+                const mainContent = document.getElementById("app-main-content");
+                const favsZone = document.getElementById("app-favorites-view");
+                if (mainContent && favsZone && mainContent.style.display === "none") {
+                    mainContent.style.display = "block";
+                    favsZone.style.display = "none";
+                    setActiveNav("btn-nav-schedule");
+                }
+
+                if (routeType === 'talk') {
+                    const globalModal = document.getElementById('globalTalkModal');
+                    if (globalModal) {
+                        const originalBtn = document.querySelector(`button[data-id="${id}"][data-bs-target="#globalTalkModal"]`);
+                        const modalInstance = bootstrap.Modal.getOrCreateInstance(globalModal);
+
+                        if (originalBtn) {
+                            modalInstance.show(originalBtn);
+                        } else {
+                            // Use your safe JSON fallback for search/direct navigation matches
+                            globalModal.dataset.activeTalkId = id;
+                            modalInstance.show();
+                        }
+                    }
+                }
+                else if (routeType === 'session') {
+                    // Safe Scoped Selector: Ignores matching IDs inside the authors pane
+                    const element = document.querySelector(`.tab-content .tab-pane:not(#pills-authors) #collapse${id}`);
+                    if (element) {
+                        // Uncollapse the parent Day tab pane automatically
+                        const tabPane = element.closest('.tab-pane');
+                        if (tabPane) {
+                            const tabTrigger = document.querySelector(`button[data-bs-target="#${tabPane.id}"]`);
+                            if (tabTrigger) bootstrap.Tab.getOrCreateInstance(tabTrigger).show();
+                        }
+                        // Expand the target session accordion item
+                        bootstrap.Collapse.getOrCreateInstance(element).show();
+                        setTimeout(() => {
+                            element.closest('.accordion-item')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 300);
+                    }
+                }
+                else if (routeType === 'author') {
+                    // Trigger your lazy loader skeleton assembly first
+                    renderAuthorsSkeleton();
+
+                    // Activate the Authors Tab
+                    const authorsTabTrigger = document.getElementById('pills-authors-tab');
+                    if (authorsTabTrigger) bootstrap.Tab.getOrCreateInstance(authorsTabTrigger).show();
+
+                    // Safe Scoped Selector: Target the item within the authors container
+                    const element = document.querySelector(`#accordion-authors #collapse${id}`);
+                    if (element) {
+                        bootstrap.Collapse.getOrCreateInstance(element).show();
+                        setTimeout(() => {
+                            element.closest('.accordion-item')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 300);
+                    }
+                }
+            }
+
+            // Bind routing triggers to browser history events
+            window.addEventListener('hashchange', handleRouting);
+            document.addEventListener('DOMContentLoaded', () => {
+                // Run after initialization scripts have processed the primary load layout
+                setTimeout(handleRouting, 100);
+            });
+
+            // Sync manual expansions to the browser hash bar
+            document.body.addEventListener('show.bs.collapse', function (event) {
+                const collapseEl = event.target;
+                if (!collapseEl.id || !collapseEl.id.startsWith('collapse')) return;
+
+                const id = collapseEl.id.replace('collapse', '');
+
+                if (collapseEl.closest('#accordion-authors')) {
+                    if (window.location.hash !== `#/author/${id}`) window.location.hash = `#/author/${id}`;
+                } else {
+                    if (window.location.hash !== `#/session/${id}`) window.location.hash = `#/session/${id}`;
+                }
+            });
+
+            // Clear track logs when closed
+            document.body.addEventListener('hide.bs.collapse', function (event) {
+                const collapseEl = event.target;
+                if (!collapseEl.id || !collapseEl.id.startsWith('collapse')) return;
+
+                const id = collapseEl.id.replace('collapse', '');
+                if (window.location.hash === `#/session/${id}` || window.location.hash === `#/author/${id}`) {
+                    window.location.hash = '';
+                }
+            });
+
+            function onQrScanSuccess(decodedText) {
+                try {
+                    const incomingUrl = new URL(decodedText);
+                    if (incomingUrl.hash) {
+                        // Simply set the hash; the browser hashchange handler does all the heavy UI lifting!
+                        window.location.hash = incomingUrl.hash;
+                    }
+                } catch (e) {
+                    console.error("Invalid badge URL configuration structure detected.", e);
+                }
+            }
         </script>
     </body>
 </html>

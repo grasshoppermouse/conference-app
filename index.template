@@ -196,6 +196,7 @@
                                         class="fav-btn p-1 mb-1"
                                         data-type="session"
                                         data-id="{{session.id}}"
+                                        data-title="{{session.title}}"
                                         data-time="{{session.startdatetime}}"
                                         data-location="{{session.location}}"
                                         title="Favorite"
@@ -261,6 +262,7 @@
                                             class="fav-btn"
                                             data-type="talk"
                                             data-id="{{talk.id}}"
+                                            data-title="{{escape_html(talk.title)}}"
                                             data-time="{{talk.startdatetime}}"
                                             data-location="{{talk.location}}"
                                             title="Favorite"
@@ -712,6 +714,9 @@
 
                     let html = "";
                     author.data.forEach((talk) => {
+                        // Escape quotes safely for HTML attributes
+                        const safeTitle = talk.title.replace(/"/g, '&quot;');
+
                         html += `
                             <div class="d-flex align-items-center mb-2">
                                 <button type="button" class="btn btn-light text-start author-talk-btn"
@@ -721,13 +726,12 @@
                                 <button type="button" class="btn btn-link p-0 text-muted ms-2 copy-btn" data-route="talk" data-id="${talk.id}" title="Copy Talk Link">
                                     <i class="bi bi-link-45deg fs-5"></i>
                                 </button>
-                                <button type="button" class="fav-btn" data-type="talk" data-id="${talk.id}" title="Favorite">
+                                <button type="button" class="fav-btn" data-type="talk" data-id="${talk.id}" data-title="${safeTitle}" title="Favorite">
                                     <img src="./star.svg" alt="Favorite" />
                                 </button>
                             </div>
                         `;
                     });
-
                     bodyZone.innerHTML = html;
 
                     // Dynamically sync favorite filled/empty star icon states

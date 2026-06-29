@@ -164,17 +164,31 @@
                                     {{session.title}} <br />
                                     {{session.time}}. {{session.location}}
                                 </button>
-                                <button
-                                    type="button"
-                                    class="fav-btn"
-                                    data-type="session"
-                                    data-id="{{session.id}}"
-                                    data-time="{{session.startdatetime}}"
-                                    data-location="{{session.location}}"
-                                    title="Favorite"
+                                <!-- Add this aligned wrapper block -->
+                                <div
+                                    class="d-flex align-items-center gap-2 me-2"
                                 >
-                                    <img src="./star.svg" alt="Favorite" />
-                                </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-link p-0 text-muted copy-btn"
+                                        data-route="session"
+                                        data-id="{{session.id}}"
+                                        title="Copy Session Link"
+                                    >
+                                        <i class="bi bi-link-45deg fs-4"></i>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="fav-btn"
+                                        data-type="session"
+                                        data-id="{{session.id}}"
+                                        data-time="{{session.startdatetime}}"
+                                        data-location="{{session.location}}"
+                                        title="Favorite"
+                                    >
+                                        <img src="./star.svg" alt="Favorite" />
+                                    </button>
+                                </div>
                             </h2>
                             <div
                                 id="collapse{{session.id}}"
@@ -198,6 +212,17 @@
                                             data-datetime="{{talk.startdatetime}}"
                                         >
                                             {{talk.title}}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn btn-link p-0 text-muted ms-2 copy-btn"
+                                            data-route="talk"
+                                            data-id="{{talk.id}}"
+                                            title="Copy Talk Link"
+                                        >
+                                            <i
+                                                class="bi bi-link-45deg fs-5"
+                                            ></i>
                                         </button>
                                         <button
                                             type="button"
@@ -297,6 +322,16 @@
                         >
                             <span id="modal-talk-meta"></span>
                             <div class="d-flex align-items-center gap-3">
+                                <button
+                                    type="button"
+                                    id="modal-copy-btn"
+                                    class="btn btn-link p-0 text-muted copy-btn"
+                                    data-route="talk"
+                                    data-id=""
+                                    title="Copy Talk Link"
+                                >
+                                    <i class="bi bi-link-45deg fs-4"></i>
+                                </button>
                                 <button
                                     type="button"
                                     id="modal-fav-btn"
@@ -605,6 +640,9 @@
                                     <small class="text-muted fw-normal">${author.affiliation || ''}</small>
                                 </div>
                             </button>
+                            <button type="button" class="btn btn-link p-0 text-muted me-3 copy-btn" data-route="author" data-id="${author.author_id}" title="Copy Author Link">
+                                <i class="bi bi-link-45deg fs-4"></i>
+                            </button>
                         </h2>
                         <div id="collapse${author.author_id}" class="accordion-collapse collapse"
                             data-bs-parent="#accordion-authors">
@@ -647,6 +685,9 @@
                                 <button type="button" class="btn btn-light text-start author-talk-btn"
                                     data-bs-toggle="modal" data-bs-target="#globalTalkModal" data-id="${talk.id}">
                                     ${talk.daytimelocation}. <strong>${talk.title}</strong>
+                                </button>
+                                <button type="button" class="btn btn-link p-0 text-muted ms-2 copy-btn" data-route="talk" data-id="${talk.id}" title="Copy Talk Link">
+                                    <i class="bi bi-link-45deg fs-5"></i>
                                 </button>
                                 <button type="button" class="fav-btn" data-type="talk" data-id="${talk.id}" title="Favorite">
                                     <img src="./star.svg" alt="Favorite" />
@@ -704,6 +745,7 @@
                         const metaNode = document.getElementById('modal-talk-meta');
                         const abstractNode = document.getElementById('modal-talk-abstract');
                         const modalFavBtn = document.getElementById('modal-fav-btn');
+                        const modalCopyBtn = document.getElementById('modal-copy-btn');
 
                         if (talkData) {
                             // 2. Populate from the dictionary index
@@ -715,6 +757,7 @@
                             modalFavBtn.setAttribute('data-title', talkData.title);
                             modalFavBtn.setAttribute('data-time', talkData.startdatetime || '');
                             modalFavBtn.setAttribute('data-location', talkData.location || '');
+                            modalCopyBtn.setAttribute('data-id', talkData.id);
                         } else {
                             // 3. Graceful fallback for Schedule View buttons that still use data-* attributes
                             metaNode.textContent = button.getAttribute('data-meta') || "";
@@ -724,6 +767,7 @@
                             modalFavBtn.setAttribute('data-title', button.getAttribute('data-title') || "");
                             modalFavBtn.setAttribute('data-time', button.getAttribute('data-time') || button.getAttribute('data-datetime') || "");
                             modalFavBtn.setAttribute('data-location', button.getAttribute('data-location') || "");
+                            modalCopyBtn.setAttribute('data-id', id);
                         }
 
                         // 4. Update the visual filled/empty star state
@@ -1004,6 +1048,41 @@
             document.getElementById('qrScannerModal').addEventListener('hide.bs.modal', () => {
                 if (html5QrScanner && html5QrScanner.isScanning) {
                     html5QrScanner.stop().catch(err => console.error("Error killing video track context.", err));
+                }
+            });
+            // Global Clipboard Copy Handler Engine
+            document.body.addEventListener('click', async (e) => {
+                const btn = e.target.closest('.copy-btn');
+                if (!btn) return;
+
+                // Prevent accordion cards from collapsing/expanding when link button is clicked
+                e.preventDefault();
+                e.stopPropagation();
+
+                const route = btn.dataset.route;
+                const id = btn.dataset.id;
+                if (!route || !id) return;
+
+                // Construct perfect deep-link target URL configuration hash mapping
+                const shareUrl = `${window.location.origin}${window.location.pathname}#/${route}/${id}`;
+
+                try {
+                    await navigator.clipboard.writeText(shareUrl);
+
+                    // Visual Feedback UI State Mutation Loop
+                    const icon = btn.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('bi-link-45deg', 'text-muted');
+                        icon.classList.add('bi-check-lg', 'text-success');
+
+                        // Revert back to original chain link style state after 2 seconds
+                        setTimeout(() => {
+                            icon.classList.remove('bi-check-lg', 'text-success');
+                            icon.classList.add('bi-link-45deg', 'text-muted');
+                        }, 2000);
+                    }
+                } catch (err) {
+                    console.error('Failed to commit link target serialization copy pipeline command.', err);
                 }
             });
         </script>

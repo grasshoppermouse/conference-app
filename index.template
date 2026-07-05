@@ -633,7 +633,6 @@
                                 </div>
                             </button>
                             <button type="button" class="btn btn-link p-0 text-muted me-3 copy-btn" data-route="author" data-id="${author.author_id}" title="Copy Author Link">
-                                // <i class="bi bi-link-45deg fs-4"></i>
                                 <img src="./link-45deg.svg" alt="Link" />
                             </button>
                         </h2>
@@ -683,7 +682,6 @@
                                     ${talk.daytimelocation}. <strong>${talk.title}</strong>
                                 </button>
                                 <button type="button" class="btn btn-link p-0 text-muted ms-2 copy-btn" data-route="talk" data-id="${talk.id}" title="Copy Talk Link">
-                                    // <i class="bi bi-link-45deg fs-5"></i>
                                     <img src="./link-45deg.svg" alt="Link" />
                                 </button>
                                 <button type="button" class="fav-btn" data-type="talk" data-id="${talk.id}" data-title="${safeTitle}" title="Favorite">
@@ -1075,16 +1073,15 @@
 
                 // Visual Feedback UI State Mutation Loop
                 const icon = btn.querySelector('i');
-                if (icon) {
-                    icon.classList.remove('bi-link-45deg', 'text-muted');
-                    icon.classList.add('bi-check-lg', 'text-success');
-
+                const img = btn.querySelector('img');
+                if (img) {
+                    img.src = "./link.svg";
                     // Revert back to original chain link style state after 1 second
                     setTimeout(() => {
-                        icon.classList.remove('bi-check-lg', 'text-success');
-                        icon.classList.add('bi-link-45deg', 'text-muted');
+                        img.src = "./link-45deg.svg"
                     }, 1000);
                 }
+
             } catch (err) {
                 console.error('Failed to commit link target serialization copy pipeline command.', err);
             }

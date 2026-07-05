@@ -81,7 +81,7 @@
                         placeholder="Search talks by title or abstract..." autocomplete="off" />
                     <!-- QR Code Scan Trigger Button -->
                     <button class="btn btn-outline-secondary" type="button" id="btn-scan-qr" title="Scan Badge QR">
-                        <i class="bi bi-qr-code-scan"></i>
+                        <img src="./qr-code-scan.svg" alt="QRcode" />
                     </button>
                     <button class="btn btn-outline-secondary" type="button" id="clear-search">
                         <img src="./x.svg" alt="X" />

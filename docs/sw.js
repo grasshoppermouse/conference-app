@@ -8,6 +8,7 @@ const ASSETS = [
   "./bootstrap-icons.min.css",
   "./bootstrap.bundle.min.js",
   "./bootstrap.min.css",
+  "./html5-qrcode.min.js",
   "./star.svg",
   "./star-fill.svg",
   "./x.svg",
@@ -15,6 +16,7 @@ const ASSETS = [
   "./calendar3.svg",
   "./calendar.svg",
   "./geo-alt.svg",
+  "./qr-code-scan.svg"
   // "./fonts/bootstrap-icons.woff",
   // "./fonts/bootstrap-icons.woff2",
 ];

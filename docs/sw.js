@@ -19,6 +19,7 @@ const ASSETS = [
   "./qr-code-scan.svg",
   "./link-45deg.svg",
   "./share.svg"
+  "./box-arrow-up.svg"
   // "./fonts/bootstrap-icons.woff",
   // "./fonts/bootstrap-icons.woff2",
 ];

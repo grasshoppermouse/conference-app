@@ -33346,7 +33346,7 @@
             <!-- Export Schedule Trigger Button -->
             <button type="button" id="btn-export-favorites" class="btn btn-link btn-sm d-flex align-items-center gap-1">
                 <!-- <i id="share-icon-img" class="bi bi-share"></i> -->
-                <img src="./share.svg" alt="Share" />
+                <img id="share-icon-img" src="./share.svg" alt="Share" />
             </button>
         </div>
         <div id="favorites-list"></div>
@@ -33468,8 +33468,11 @@
             // Dynamically swap the icon to match the host platform's native style
             const shareIcon = document.getElementById("share-icon-img");
             if (shareIcon && isAppleDevice) {
-                shareIcon.classList.remove("bi-share");
-                shareIcon.classList.add("bi-box-arrow-up");
+                // shareIcon.classList.remove("bi-share");
+                // shareIcon.classList.add("bi-box-arrow-up");
+                shareIcon.src = "./box-arrow-up.svg"
+            } else {
+                shareIcon.src = "./share.svg"
             }
 
             // Favorite button click logic (FIXED: Uses Event Delegation)
@@ -34214,20 +34217,9 @@
 
                 // Visual Feedback UI State Mutation Loop
                 const icon = btn.querySelector('i');
-                // if (icon) {
-                //     icon.classList.remove('bi-link-45deg', 'text-muted');
-                //     icon.classList.add('bi-check-lg', 'text-success');
-
-                //     // Revert back to original chain link style state after 1 second
-                //     setTimeout(() => {
-                //         icon.classList.remove('bi-check-lg', 'text-success');
-                //         icon.classList.add('bi-link-45deg', 'text-muted');
-                //     }, 1000);
-                // }
                 const img = btn.querySelector('img');
                 if (img) {
                     img.src = "./link.svg";
-
                     // Revert back to original chain link style state after 1 second
                     setTimeout(() => {
                         img.src = "./link-45deg.svg"

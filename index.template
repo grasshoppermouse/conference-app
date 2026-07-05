@@ -66,7 +66,7 @@
             transform: scale(0.85);
         }
     </style>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="html5-qrcode.min.js" type="text/javascript"></script>
 </head>
 
 <body class="pb-70">
@@ -319,7 +319,6 @@
 
             // Detect any Apple platform (macOS, iPhone, iPad, iPod) since they all use the up-arrow share icon
             const isAppleDevice = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
-            console.log(isAppleDevice)
 
             // Dynamically swap the icon to match the host platform's native style
             const shareIcon = document.getElementById("share-icon-img");
@@ -334,7 +333,6 @@
                 const btn = e.target.closest(".fav-btn");
                 if (!btn) return;
 
-                console.log("clicked dynamic button");
                 const id = btn.dataset.id;
                 const type = btn.dataset.type;
                 const key = `${type}:${id}`;

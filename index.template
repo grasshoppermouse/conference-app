@@ -144,7 +144,8 @@
                                 <!-- Link Button on Bottom -->
                                 <button type="button" class="btn btn-link p-1 text-muted copy-btn" data-route="session"
                                     data-id="{{session.id}}" title="Copy Session Link">
-                                    <i class="bi bi-link-45deg fs-5" style="line-height: 1"></i>
+                                    <!-- <i class="bi bi-link-45deg fs-5" style="line-height: 1"></i> -->
+                                    <img src="./link-45deg.svg" alt="Link" />
                                 </button>
                             </div>
                         </h2>
@@ -164,7 +165,8 @@
                                     </button>
                                     <button type="button" class="btn btn-link p-0 text-muted ms-2 copy-btn"
                                         data-route="talk" data-id="{{talk.id}}" title="Copy Talk Link">
-                                        <i class="bi bi-link-45deg fs-5"></i>
+                                        <!-- <i class="bi bi-link-45deg fs-5"></i> -->
+                                        <img src="./link-45deg.svg" alt="Link" />
                                     </button>
                                     <button type="button" class="fav-btn" data-type="talk" data-id="{{talk.id}}"
                                         data-title="{{escape_html(talk.title)}}" data-time="{{talk.startdatetime}}"
@@ -202,7 +204,8 @@
             <h3 class="m-0">Favorites</h3>
             <!-- Export Schedule Trigger Button -->
             <button type="button" id="btn-export-favorites" class="btn btn-link btn-sm d-flex align-items-center gap-1">
-                <i id="share-icon-img" class="bi bi-share"></i>
+                <!-- <i id="share-icon-img" class="bi bi-share"></i> -->
+                <img src="./share.svg" alt="Share" />
             </button>
         </div>
         <div id="favorites-list"></div>
@@ -233,7 +236,8 @@
                         <div class="d-flex align-items-center gap-3">
                             <button type="button" id="modal-copy-btn" class="btn btn-link p-0 text-muted copy-btn"
                                 data-route="talk" data-id="" title="Copy Talk Link">
-                                <i class="bi bi-link-45deg fs-4"></i>
+                                <!-- <i class="bi bi-link-45deg fs-4"></i> -->
+                                <img src="./link-45deg.svg" alt="Link" />
                             </button>
                             <button type="button" id="modal-fav-btn" class="fav-btn" data-type="talk" data-id=""
                                 title="Favorite">
@@ -629,7 +633,8 @@
                                 </div>
                             </button>
                             <button type="button" class="btn btn-link p-0 text-muted me-3 copy-btn" data-route="author" data-id="${author.author_id}" title="Copy Author Link">
-                                <i class="bi bi-link-45deg fs-4"></i>
+                                // <i class="bi bi-link-45deg fs-4"></i>
+                                <img src="./link-45deg.svg" alt="Link" />
                             </button>
                         </h2>
                         <div id="collapse${author.author_id}" class="accordion-collapse collapse"
@@ -678,7 +683,8 @@
                                     ${talk.daytimelocation}. <strong>${talk.title}</strong>
                                 </button>
                                 <button type="button" class="btn btn-link p-0 text-muted ms-2 copy-btn" data-route="talk" data-id="${talk.id}" title="Copy Talk Link">
-                                    <i class="bi bi-link-45deg fs-5"></i>
+                                    // <i class="bi bi-link-45deg fs-5"></i>
+                                    <img src="./link-45deg.svg" alt="Link" />
                                 </button>
                                 <button type="button" class="fav-btn" data-type="talk" data-id="${talk.id}" data-title="${safeTitle}" title="Favorite">
                                     <img src="./star.svg" alt="Favorite" />
@@ -889,14 +895,8 @@
             const routeType = parts[1]; // 'talk', 'session', or 'author'
             const id = parts[2];
 
-            // Ensure the main schedule container is visible (if coming from Favorites view)
             const mainContent = document.getElementById("app-main-content");
             const favsZone = document.getElementById("app-favorites-view");
-            if (mainContent && favsZone && mainContent.style.display === "none") {
-                mainContent.style.display = "block";
-                favsZone.style.display = "none";
-                setActiveNav("btn-nav-schedule");
-            }
 
             if (routeType === 'talk') {
                 const globalModal = document.getElementById('globalTalkModal');
@@ -914,6 +914,13 @@
                 }
             }
             else if (routeType === 'session') {
+                // MOVED HERE: Only force Schedule view visibility when navigating to a specific session accordion
+                if (mainContent && favsZone && mainContent.style.display === "none") {
+                    mainContent.style.display = "block";
+                    favsZone.style.display = "none";
+                    setActiveNav("btn-nav-schedule");
+                }
+
                 // Safe Scoped Selector: Ignores matching IDs inside the authors pane
                 const element = document.querySelector(`.tab-content .tab-pane:not(#pills-authors) #collapse${id}`);
                 if (element) {
@@ -931,6 +938,13 @@
                 }
             }
             else if (routeType === 'author') {
+                // MOVED HERE: Only force Schedule view visibility when navigating to an author profile
+                if (mainContent && favsZone && mainContent.style.display === "none") {
+                    mainContent.style.display = "block";
+                    favsZone.style.display = "none";
+                    setActiveNav("btn-nav-schedule");
+                }
+
                 // Trigger your lazy loader skeleton assembly first
                 renderAuthorsSkeleton();
 
@@ -1065,11 +1079,11 @@
                     icon.classList.remove('bi-link-45deg', 'text-muted');
                     icon.classList.add('bi-check-lg', 'text-success');
 
-                    // Revert back to original chain link style state after 2 seconds
+                    // Revert back to original chain link style state after 1 second
                     setTimeout(() => {
                         icon.classList.remove('bi-check-lg', 'text-success');
                         icon.classList.add('bi-link-45deg', 'text-muted');
-                    }, 2000);
+                    }, 1000);
                 }
             } catch (err) {
                 console.error('Failed to commit link target serialization copy pipeline command.', err);

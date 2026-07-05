@@ -16,7 +16,9 @@ const ASSETS = [
   "./calendar3.svg",
   "./calendar.svg",
   "./geo-alt.svg",
-  "./qr-code-scan.svg"
+  "./qr-code-scan.svg",
+  "./link-45deg.svg",
+  "./share.svg"
   // "./fonts/bootstrap-icons.woff",
   // "./fonts/bootstrap-icons.woff2",
 ];

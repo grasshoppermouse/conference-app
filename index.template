@@ -674,6 +674,20 @@
                 }
 
                 let html = "";
+
+                // 1. Prepend the Contact Email Link as the FIRST item
+                console.log(author.email)
+                if (author.email) {
+                    html += `
+                <div class="mb-3 border-bottom pb-2">
+                    <a href="mailto:${author.email}" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center">
+                        <i class="bi bi-envelope me-2"></i> Contact Author (${author.email})
+                    </a>
+                </div>
+            `;
+                }
+
+                // 2. Append their presentation schedule entries
                 author.data.forEach((talk) => {
                     // Escape quotes safely for HTML attributes
                     const safeTitle = talk.title.replace(/"/g, '&quot;');

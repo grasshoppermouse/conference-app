@@ -99,12 +99,12 @@
                 <div class="input-group">
                     <input type="text" id="search-input" class="form-control form-control-lg"
                         placeholder="Search talks by title or abstract..." autocomplete="off" />
+                    <button class="btn btn-outline-secondary" type="button" id="clear-search">
+                        <img src="./x.svg" alt="X" />
+                    </button>
                     <!-- QR Code Scan Trigger Button -->
                     <button class="btn btn-outline-secondary" type="button" id="btn-scan-qr" title="Scan Badge QR">
                         <img src="./qr-code-scan.svg" alt="QRcode" />
-                    </button>
-                    <button class="btn btn-outline-secondary" type="button" id="clear-search">
-                        <img src="./x.svg" alt="X" />
                     </button>
                 </div>
                 <div id="search-results" class="list-group mt-2" style="max-height: 300px; overflow-y: auto"></div>
@@ -113,33 +113,33 @@
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-Wed-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-Wed" type="button" role="tab" aria-controls="pills-Wed"
-                        aria-selected="true">
+                    <button class="nav-link active" id="pills-Wed-tab"
+                        data-bs-toggle="pill" data-bs-target="#pills-Wed" type="button" role="tab"
+                        aria-controls="pills-Wed" aria-selected="true">
                         Wed
                     </button>
                 </li>
                 
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-Thu-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-Thu" type="button" role="tab" aria-controls="pills-Thu"
-                        aria-selected="true">
+                    <button class="nav-link" id="pills-Thu-tab"
+                        data-bs-toggle="pill" data-bs-target="#pills-Thu" type="button" role="tab"
+                        aria-controls="pills-Thu" aria-selected="false">
                         Thu
                     </button>
                 </li>
                 
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-Fri-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-Fri" type="button" role="tab" aria-controls="pills-Fri"
-                        aria-selected="true">
+                    <button class="nav-link" id="pills-Fri-tab"
+                        data-bs-toggle="pill" data-bs-target="#pills-Fri" type="button" role="tab"
+                        aria-controls="pills-Fri" aria-selected="false">
                         Fri
                     </button>
                 </li>
                 
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-Sat-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-Sat" type="button" role="tab" aria-controls="pills-Sat"
-                        aria-selected="true">
+                    <button class="nav-link" id="pills-Sat-tab"
+                        data-bs-toggle="pill" data-bs-target="#pills-Sat" type="button" role="tab"
+                        aria-controls="pills-Sat" aria-selected="false">
                         Sat
                     </button>
                 </li>
@@ -158,8 +158,8 @@
         <div class="tab-content" id="pills-tabContent">
             <!-- Schedule View -->
             
-            <div class="tab-pane fade show" id="pills-Wed" role="tabpanel" aria-labelledby="pills-Wed-tab"
-                tabindex="0">
+            <div class="tab-pane fadeshow active" id="pills-Wed" role="tabpanel"
+                aria-labelledby="pills-Wed-tab" tabindex="0">
                 <div class="accordion" id="accordionWed">
                     
                     <div class="accordion-item">
@@ -226,8 +226,8 @@
                 </div>
             </div>
             
-            <div class="tab-pane fade show" id="pills-Thu" role="tabpanel" aria-labelledby="pills-Thu-tab"
-                tabindex="0">
+            <div class="tab-pane fade" id="pills-Thu" role="tabpanel"
+                aria-labelledby="pills-Thu-tab" tabindex="0">
                 <div class="accordion" id="accordionThu">
                     
                     <div class="accordion-item">
@@ -294,15 +294,15 @@
                 </div>
             </div>
             
-            <div class="tab-pane fade show" id="pills-Fri" role="tabpanel" aria-labelledby="pills-Fri-tab"
-                tabindex="0">
+            <div class="tab-pane fade" id="pills-Fri" role="tabpanel"
+                aria-labelledby="pills-Fri-tab" tabindex="0">
                 <div class="accordion" id="accordionFri">
                     
                 </div>
             </div>
             
-            <div class="tab-pane fade show" id="pills-Sat" role="tabpanel" aria-labelledby="pills-Sat-tab"
-                tabindex="0">
+            <div class="tab-pane fade" id="pills-Sat" role="tabpanel"
+                aria-labelledby="pills-Sat-tab" tabindex="0">
                 <div class="accordion" id="accordionSat">
                     
                 </div>
@@ -895,7 +895,7 @@
                         if (isAuthorsView) {
                             resultItem.innerHTML = `<span class="text-start">${item.first_name || ''} ${item.last_name || ''}</span>`;
                         } else {
-                            resultItem.innerHTML = `<span class="text-start">${item.title || ''}</span>`;
+                            resultItem.innerHTML = `<span class="text-start">${item.day} ${item.start_time}: ${item.title || ''}</span>`;
                         }
                         searchResults.appendChild(resultItem);
                     });

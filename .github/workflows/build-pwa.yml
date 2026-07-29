@@ -40,7 +40,7 @@ jobs:
           python hbes-export.py --event-id "${{ inputs.event_id }}"
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: pwa-build-output
           path: |

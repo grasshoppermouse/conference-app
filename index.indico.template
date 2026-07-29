@@ -789,7 +789,7 @@
                         if (isAuthorsView) {
                             resultItem.innerHTML = `<span class="text-start">${item.first_name || ''} ${item.last_name || ''}</span>`;
                         } else {
-                            resultItem.innerHTML = `<span class="text-start">${item.title || ''}</span>`;
+                            resultItem.innerHTML = `<span class="text-start">${item.day} ${item.start_time}: ${item.title || ''}</span>`;
                         }
                         searchResults.appendChild(resultItem);
                     });

@@ -13,8 +13,8 @@ if os.getenv("API_TOKEN") is None:
 
     # Load variables from the .env file into the system environment
     load_dotenv()
-    API_TOKEN = os.environ.get("API_TOKEN")
-    EVENT_ID = os.environ.get("EVENT_ID")
+API_TOKEN = os.environ.get("API_TOKEN")
+EVENT_ID = os.environ.get("EVENT_ID")
 
 
 def clean_text(text):

@@ -25,23 +25,18 @@
             border: none;
             background: none;
             color: #ffc107;
-            /* Bootstrap warning color for yellow/gold */
         }
 
         body {
             padding-bottom: 70px;
-            /* Prevent content from being covered by the menubar */
         }
 
         .nav-item_active {
             color: #ecb73c !important;
-            /* Match your theme color */
         }
 
-        /* Highlight for active bottom nav items */
         .nav-link-btn.active-nav {
             color: #ecb73c !important;
-            /* Your theme's teal color */
             font-weight: bold;
             transform: scale(1.1);
             transition: all 0.2s ease-in-out;
@@ -53,16 +48,13 @@
 
         .accordion-item {
             scroll-margin-top: 240px;
-            /* Adjust this value to give it a nice cushion at the top */
         }
 
         .accordion-button {
-            /* Balance padding to give text maximum breathing room */
             padding-right: 0.5rem !important;
         }
 
         .accordion-button::after {
-            /* Optional: Shifting or scaling down the accordion chevron slightly if it competes for space */
             transform: scale(0.85);
         }
 
@@ -77,10 +69,8 @@
         ol.affiliations li {
             display: inline;
             counter-increment: aff-counter;
-            /* margin-right: 5px; */
         }
 
-        /* Explicitly generate numbers before each inline item */
         ol.affiliations li::before {
             content: counter(aff-counter) ". ";
             font-weight: 500;
@@ -144,13 +134,6 @@
                     </button>
                 </li>
                 
-                <li class="nav-item ms-auto" role="presentation">
-                    <button class="nav-link" id="pills-authors-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-authors" type="button" role="tab" aria-controls="pills-authors"
-                        aria-selected="false">
-                        <img src="./person.svg" alt="Person" />
-                    </button>
-                </li>
             </ul>
         </div>
         <!-- END OF STICKY HEADER CONTAINER -->
@@ -158,7 +141,7 @@
         <div class="tab-content" id="pills-tabContent">
             <!-- Schedule View -->
             
-            <div class="tab-pane fadeshow active" id="pills-Wed" role="tabpanel"
+            <div class="tab-pane fade show active" id="pills-Wed" role="tabpanel"
                 aria-labelledby="pills-Wed-tab" tabindex="0">
                 <div class="accordion" id="accordionWed">
                     
@@ -176,18 +159,16 @@
                                 </div>
                             </button>
 
-                            <!-- Vertically Stacked Action Panel -->
+                            <!-- Action Panel -->
                             <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
                                 style="min-width: 45px; z-index: 2">
-                                <!-- Favorite Button on Top -->
                                 <button type="button" class="fav-btn p-1 mb-1" data-type="session"
-                                    data-id="30595" data-title="Mental Health: Mental Health 1"
+                                    data-id="30595" data-title="Mental Health 1"
                                     data-time="2027-05-12 09:00:00-07:00" data-location="VMMC"
                                     title="Favorite">
                                     <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
                                 </button>
 
-                                <!-- Share Button on Bottom -->
                                 <button type="button" class="btn btn-link p-1 text-muted share-btn" data-route="session"
                                     data-id="30595" data-title="Mental Health 1" title="Share Session">
                                     <img class="share-icon" src="./share.svg" alt="Share" />
@@ -244,18 +225,16 @@
                                 </div>
                             </button>
 
-                            <!-- Vertically Stacked Action Panel -->
+                            <!-- Action Panel -->
                             <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
                                 style="min-width: 45px; z-index: 2">
-                                <!-- Favorite Button on Top -->
                                 <button type="button" class="fav-btn p-1 mb-1" data-type="session"
-                                    data-id="30628" data-title="Cooperation: Cooperation 1"
+                                    data-id="30628" data-title="Cooperation 1"
                                     data-time="2027-05-13 08:00:00-07:00" data-location=""
                                     title="Favorite">
                                     <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
                                 </button>
 
-                                <!-- Share Button on Bottom -->
                                 <button type="button" class="btn btn-link p-1 text-muted share-btn" data-route="session"
                                     data-id="30628" data-title="Cooperation 1" title="Share Session">
                                     <img class="share-icon" src="./share.svg" alt="Share" />
@@ -313,7 +292,6 @@
             <div class="tab-pane fade" id="pills-authors" role="tabpanel" aria-labelledby="pills-authors-tab"
                 tabindex="0">
                 <div class="accordion" id="accordion-authors">
-                    <!-- Dynamic Loader Placeholder -->
                     <div class="text-center py-5" id="authors-tab-loader">
                         <div class="spinner-border text-warning" role="status">
                             <span class="visually-hidden">Loading authors...</span>
@@ -325,7 +303,7 @@
     </div>
 
     <!-- View for Favorites -->
-    <div id="app-favorites-view" style="display: none">
+    <div id="app-favorites-view" class="container-fluid pt-3" style="display: none">
         <div class="d-flex justify-content-between align-items-center px-2 mb-4">
             <h3 class="m-0">Favorites</h3>
             <!-- Export Schedule Trigger Button -->
@@ -339,9 +317,13 @@
     <!-- Bottom Navigation Bar -->
     <nav class="fixed-bottom bg-white border-top shadow-sm" style="height: 60px">
         <div class="container d-flex justify-content-around align-items-center">
-            <a href="#" id="btn-nav-schedule" class="text-decoration-none text-dark text-center nav-link-btn">
+            <a href="#" id="btn-nav-schedule" class="text-decoration-none text-muted text-center nav-link-btn">
                 <img src="./calendar3.svg" class="fs-4" alt="Calendar" />
                 <div style="font-size: 10px">Schedule</div>
+            </a>
+            <a href="#" id="btn-nav-authors" class="text-decoration-none text-muted text-center nav-link-btn">
+                <img src="./person.svg" class="fs-4" alt="Authors" />
+                <div style="font-size: 10px">Authors</div>
             </a>
             <a href="#" id="btn-nav-favorites" class="text-decoration-none text-muted text-center nav-link-btn">
                 <img src="./star.svg" class="fs-4" alt="Star" />
@@ -388,7 +370,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body bg-dark p-0 position-relative">
-                    <!-- Camera view area -->
                     <div id="qr-video-reader" style="width: 100%"></div>
                 </div>
             </div>
@@ -401,13 +382,17 @@
         const isAppleDevice = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
         const shareIconSrc = isAppleDevice ? "./box-arrow-up.svg" : "./share.svg";
 
+        // Global State & Data Deserialization
+        let favorites = JSON.parse(localStorage.getItem("conference_favorites") || "{}") || {};
+        let talkIndex = {"1": {"id": "1", "session_id": 30595, "title": "Depression is not a disoder", "primaryauthors": [{"first_name": "Edward", "last_name": "Hagen", "affiliation": "Washington State University", "person_id": 271751, "email": "edhagen@wsu.edu", "presentations": ["1", "2"]}], "coauthors": [{"first_name": "Michael", "last_name": "Gaffney", "affiliation": "UCLA", "person_id": 271816, "email": "michael.gaffney@wsu.edu", "presentations": ["1"]}], "abstract": "<p class = \"title\"><strong>Depression is not a disoder</strong></p>\n    <div class=\"authors-block\">\n  <p class=\"authors\">Edward Hagen<sup>1</sup>, Michael Gaffney<sup>2</sup></p>\n<ol class=\"affiliations\">\n  <li>Washington State University</li>\n  <li>UCLA</li>\n</ol>\n</div>\n    <div class = \"abstract\" style = \"margin-top: 10px;\">\n    <p>Major <strong>depression</strong> is considered to be a pathological response to stress that elicits aversive responses towards depressed individuals. Alternatively, depression might involve honest signals of need in response to stress and help to bargain for increased support from reluctant others. To test this hypothesis, we examined responses to a wide range of emotional signals in a vignette study in which we also manipulated information about the signaler\u2019s need and her levels of conflict with the social partner (participant) in a between-subjects factorial design. Specifically, a fictional sister asked the participant to help pay for medical treatment. The sister\u2019s true need for money was either clear or questionable, and her level of conflict with the participant was either high or low. The sister\u2019s signals were either verbal request, crying, depression, or, as a control, schizophrenic symptoms.</p>\n<p>In our sample of 1,447 participants recruited from Amazon Mechanical Turk, depression increased belief in need and elicited more help than all the other proposed signals of need on our four outcome measures across all conditions. Simple crying and verbal requests were generally less effective. We also found evidence for the predicted interaction between signal type and conflict on relationship outcomes. Because signals comprising symptoms of schizophrenia caused a dramatic reduction in support, we can discount the hypothesis that help was provided due to symptoms of mental illness. Our results suggest that depression, an apparent human universal, is a relatively successful way of signaling honest need and eliciting support, consistent with costly signaling explanations.</p>\n    </div>\n    ", "location": "VMMC", "type": "Podium", "startdatetime": "2027-05-12 09:00:00-07:00", "start_time": "09:00 AM", "day": "Wed", "email": "edhagen@wsu.edu"}, "2": {"id": "2", "session_id": 30628, "title": "Ethnicity, fertility, and tobacco use: a biocultural test of the fetal protection model of female smoking", "primaryauthors": [{"first_name": "Tiffany", "last_name": "Alvarez", "affiliation": "UC Santa Barbara", "person_id": 272106, "email": "tiffany.alvarez@wsu.edu", "presentations": ["2"]}], "coauthors": [{"first_name": "Edward", "last_name": "Hagen", "affiliation": "Washington State University", "person_id": 271751, "email": "edhagen@wsu.edu"}], "abstract": "<p class = \"title\"><strong>Ethnicity, fertility, and tobacco use: a biocultural test of the fetal protection model of female smoking</strong></p>\n    <div class=\"authors-block\">\n  <p class=\"authors\">Tiffany Alvarez<sup>1</sup>, Edward Hagen<sup>2</sup></p>\n<ol class=\"affiliations\">\n  <li>UC Santa Barbara</li>\n  <li>Washington State University</li>\n</ol>\n</div>\n    <div class = \"abstract\" style = \"margin-top: 10px;\">\n    <p>Currently, cross-country variation in gender equality is thought to be the primary factor producing global tobacco use sex differences, with gender inequality, especially in low-to-middle-income countries, preventing women from obtaining and using tobacco. Our alternative hypothesis draws on the \u201cfetal protection\u201d theory from evolutionary anthropology which emphasizes that reproductively-aged women protect their fetuses and nursing infants via an evolved a network of toxin defenses, characterized by upregulated detoxification of- and/or strong aversions to- teratogenic substances (e.g. tobacco)\u2014individual-level defenses that are furthermore reinforced by culture-level proscriptions aimed at safeguarding fetal/offspring health. Although support for the fetal protection model has been found (Hagen et al. 2016), prior research has used data aggregated at the nation-level and has neither examined individual-level variation nor considered that cultural norms may also influence tobacco use. Using individual-level data from a high fertility, tobacco-growing, ethnically and socioeconomically diverse province in the South Central Andes (Jujuy, Argentina), we explore the relationship various fertility indices and sociocultural tobacco norms have on nulliparous and multiparous women\u2019s tobacco use outcomes (N=108), while controlling for demographic features and considering ethnic differences as main effects. Smoker status was determined via salivary cotinine and cross-validated with questionnaire data. Our analyses reveal ethnic differences in tobacco use attitudes and behaviors and suggest fertility characteristics are important factors in female smoking decisions. Consistent with fetal protection model predictions, these findings suggest smoking vulnerabilities intersect with sex and socio-cultural variables in an additive manner and open the door to future areas of research.</p>\n    </div>\n    ", "location": "", "type": "Podium", "startdatetime": "2027-05-13 08:00:00-07:00", "start_time": "08:00 AM", "day": "Thu", "email": "tiffany.alvarez@wsu.edu"}};
+        let authorIndex = {"272106": {"first_name": "Tiffany", "last_name": "Alvarez", "affiliation": "UC Santa Barbara", "person_id": 272106, "email": "tiffany.alvarez@wsu.edu", "presentations": ["2"]}, "271816": {"first_name": "Michael", "last_name": "Gaffney", "affiliation": "UCLA", "person_id": 271816, "email": "michael.gaffney@wsu.edu", "presentations": ["1"]}, "271751": {"first_name": "Edward", "last_name": "Hagen", "affiliation": "Washington State University", "person_id": 271751, "email": "edhagen@wsu.edu", "presentations": ["1", "2"]}};
+
         function updatePlatformIcons() {
             document.querySelectorAll(".share-icon").forEach((img) => {
                 img.src = shareIconSrc;
             });
         }
 
-        // Utility function to convert HTML abstract strings into clean plain text
         function convertAbstractToPlainText(htmlString) {
             if (!htmlString) return "";
             const doc = new DOMParser().parseFromString(htmlString, 'text/html');
@@ -425,76 +410,225 @@
                 .join('\n');
         }
 
-        // Helper function to handle active state toggling
         function setActiveNav(btnId) {
             const scheduleBtn = document.getElementById("btn-nav-schedule");
+            const authorsBtn = document.getElementById("btn-nav-authors");
             const favsBtn = document.getElementById("btn-nav-favorites");
 
             if (scheduleBtn) scheduleBtn.classList.remove("active-nav");
+            if (authorsBtn) authorsBtn.classList.remove("active-nav");
             if (favsBtn) favsBtn.classList.remove("active-nav");
 
             const activeBtn = document.getElementById(btnId);
             if (activeBtn) activeBtn.classList.add("active-nav");
         }
 
-        // Safe LocalStorage Retrieval
-        const favorites = JSON.parse(localStorage.getItem("conference_favorites") || "{}") || {};
+        function showScheduleView() {
+            const mainContent = document.getElementById("app-main-content");
+            const favsZone = document.getElementById("app-favorites-view");
+            const pillsTab = document.getElementById("pills-tab");
+            const searchInput = document.getElementById("search-input");
 
-        // Index Initialization with Fallbacks
-        let talkIndex = {"1": {"id": "1", "session_id": 30595, "title": "Depression is not a disoder", "primaryauthors": [{"first_name": "Edward", "last_name": "Hagen", "affiliation": "Washington State University", "person_id": 271751, "email": "edhagen@wsu.edu", "presentations": ["1", "2"]}], "coauthors": [{"first_name": "Michael", "last_name": "Gaffney", "affiliation": "UCLA", "person_id": 271816, "email": "michael.gaffney@wsu.edu", "presentations": ["1"]}], "abstract": "<p class = \"title\"><strong>Depression is not a disoder</strong></p>\n    <div class=\"authors-block\">\n  <p class=\"authors\">Edward Hagen<sup>1</sup>, Michael Gaffney<sup>2</sup></p>\n<ol class=\"affiliations\">\n  <li>Washington State University</li>\n  <li>UCLA</li>\n</ol>\n</div>\n    <div class = \"abstract\" style = \"margin-top: 10px;\">\n    <p>Major <strong>depression</strong> is considered to be a pathological response to stress that elicits aversive responses towards depressed individuals. Alternatively, depression might involve honest signals of need in response to stress and help to bargain for increased support from reluctant others. To test this hypothesis, we examined responses to a wide range of emotional signals in a vignette study in which we also manipulated information about the signaler\u2019s need and her levels of conflict with the social partner (participant) in a between-subjects factorial design. Specifically, a fictional sister asked the participant to help pay for medical treatment. The sister\u2019s true need for money was either clear or questionable, and her level of conflict with the participant was either high or low. The sister\u2019s signals were either verbal request, crying, depression, or, as a control, schizophrenic symptoms.</p>\n<p>In our sample of 1,447 participants recruited from Amazon Mechanical Turk, depression increased belief in need and elicited more help than all the other proposed signals of need on our four outcome measures across all conditions. Simple crying and verbal requests were generally less effective. We also found evidence for the predicted interaction between signal type and conflict on relationship outcomes. Because signals comprising symptoms of schizophrenia caused a dramatic reduction in support, we can discount the hypothesis that help was provided due to symptoms of mental illness. Our results suggest that depression, an apparent human universal, is a relatively successful way of signaling honest need and eliciting support, consistent with costly signaling explanations.</p>\n    </div>\n    ", "location": "VMMC", "type": "Podium", "startdatetime": "2027-05-12 09:00:00-07:00", "start_time": "09:00 AM", "day": "Wed", "email": "edhagen@wsu.edu"}, "2": {"id": "2", "session_id": 30628, "title": "Ethnicity, fertility, and tobacco use: a biocultural test of the fetal protection model of female smoking", "primaryauthors": [{"first_name": "Tiffany", "last_name": "Alvarez", "affiliation": "UC Santa Barbara", "person_id": 272106, "email": "tiffany.alvarez@wsu.edu", "presentations": ["2"]}], "coauthors": [{"first_name": "Edward", "last_name": "Hagen", "affiliation": "Washington State University", "person_id": 271751, "email": "edhagen@wsu.edu"}], "abstract": "<p class = \"title\"><strong>Ethnicity, fertility, and tobacco use: a biocultural test of the fetal protection model of female smoking</strong></p>\n    <div class=\"authors-block\">\n  <p class=\"authors\">Tiffany Alvarez<sup>1</sup>, Edward Hagen<sup>2</sup></p>\n<ol class=\"affiliations\">\n  <li>UC Santa Barbara</li>\n  <li>Washington State University</li>\n</ol>\n</div>\n    <div class = \"abstract\" style = \"margin-top: 10px;\">\n    <p>Currently, cross-country variation in gender equality is thought to be the primary factor producing global tobacco use sex differences, with gender inequality, especially in low-to-middle-income countries, preventing women from obtaining and using tobacco. Our alternative hypothesis draws on the \u201cfetal protection\u201d theory from evolutionary anthropology which emphasizes that reproductively-aged women protect their fetuses and nursing infants via an evolved a network of toxin defenses, characterized by upregulated detoxification of- and/or strong aversions to- teratogenic substances (e.g. tobacco)\u2014individual-level defenses that are furthermore reinforced by culture-level proscriptions aimed at safeguarding fetal/offspring health. Although support for the fetal protection model has been found (Hagen et al. 2016), prior research has used data aggregated at the nation-level and has neither examined individual-level variation nor considered that cultural norms may also influence tobacco use. Using individual-level data from a high fertility, tobacco-growing, ethnically and socioeconomically diverse province in the South Central Andes (Jujuy, Argentina), we explore the relationship various fertility indices and sociocultural tobacco norms have on nulliparous and multiparous women\u2019s tobacco use outcomes (N=108), while controlling for demographic features and considering ethnic differences as main effects. Smoker status was determined via salivary cotinine and cross-validated with questionnaire data. Our analyses reveal ethnic differences in tobacco use attitudes and behaviors and suggest fertility characteristics are important factors in female smoking decisions. Consistent with fetal protection model predictions, these findings suggest smoking vulnerabilities intersect with sex and socio-cultural variables in an additive manner and open the door to future areas of research.</p>\n    </div>\n    ", "location": "", "type": "Podium", "startdatetime": "2027-05-13 08:00:00-07:00", "start_time": "08:00 AM", "day": "Thu", "email": "tiffany.alvarez@wsu.edu"}} || {};
-        let authorIndex = {"272106": {"first_name": "Tiffany", "last_name": "Alvarez", "affiliation": "UC Santa Barbara", "person_id": 272106, "email": "tiffany.alvarez@wsu.edu", "presentations": ["2"]}, "271816": {"first_name": "Michael", "last_name": "Gaffney", "affiliation": "UCLA", "person_id": 271816, "email": "michael.gaffney@wsu.edu", "presentations": ["1"]}, "271751": {"first_name": "Edward", "last_name": "Hagen", "affiliation": "Washington State University", "person_id": 271751, "email": "edhagen@wsu.edu", "presentations": ["1", "2"]}} || {};
+            if (mainContent) mainContent.style.display = "block";
+            if (favsZone) favsZone.style.display = "none";
+            if (pillsTab) pillsTab.style.display = "flex";
 
-        document.addEventListener("DOMContentLoaded", () => {
+            const authorsPane = document.getElementById("pills-authors");
+            if (authorsPane && authorsPane.classList.contains("active")) {
+                authorsPane.classList.remove("show", "active");
+                const activeDayBtn = document.querySelector('#pills-tab button.nav-link.active') || document.querySelector('#pills-tab button.nav-link');
+                if (activeDayBtn) {
+                    const targetSelector = activeDayBtn.getAttribute("data-bs-target");
+                    const targetPane = targetSelector ? document.querySelector(targetSelector) : null;
+                    if (targetPane) targetPane.classList.add("show", "active");
+                }
+            }
+
+            if (searchInput) searchInput.placeholder = "Search talks by title or abstract...";
+            setActiveNav("btn-nav-schedule");
+        }
+
+        function showAuthorsView() {
+            const mainContent = document.getElementById("app-main-content");
+            const favsZone = document.getElementById("app-favorites-view");
+            const pillsTab = document.getElementById("pills-tab");
+            const searchInput = document.getElementById("search-input");
+
+            if (mainContent) mainContent.style.display = "block";
+            if (favsZone) favsZone.style.display = "none";
+            if (pillsTab) pillsTab.style.display = "none";
+
+            document.querySelectorAll("#pills-tabContent .tab-pane").forEach((pane) => {
+                pane.classList.remove("show", "active");
+            });
+
+            const authorsPane = document.getElementById("pills-authors");
+            if (authorsPane) authorsPane.classList.add("show", "active");
+
+            if (searchInput) searchInput.placeholder = "Search authors...";
+            renderAuthorsSkeleton();
+            setActiveNav("btn-nav-authors");
+        }
+
+        function showFavoritesView() {
             const mainContent = document.getElementById("app-main-content");
             const favsZone = document.getElementById("app-favorites-view");
 
-            const scheduleBtn = document.getElementById("btn-nav-schedule");
-            if (scheduleBtn) scheduleBtn.classList.add("active-nav");
+            if (mainContent) mainContent.style.display = "none";
+            if (favsZone) favsZone.style.display = "block";
+            renderFavoritesList();
+            setActiveNav("btn-nav-favorites");
+        }
 
-            // Update all share icons for native platform look
+        function renderFavoritesList() {
+            const listContainer = document.getElementById("favorites-list");
+            if (!listContainer) return;
+
+            favorites = JSON.parse(localStorage.getItem("conference_favorites") || "{}") || {};
+            const keys = Object.keys(favorites);
+
+            if (keys.length === 0) {
+                listContainer.innerHTML = '<div class="text-center py-4 text-muted"><p class="mb-0">No favorites saved yet.</p><small>Tap the star icon on any talk or session to save it here.</small></div>';
+                return;
+            }
+
+            let favItems = keys.map((key) => ({
+                key: key,
+                data: favorites[key] || {},
+            }));
+
+            favItems.sort((a, b) => {
+                const timeA = a.data.time ? new Date(a.data.time).getTime() : 0;
+                const timeB = b.data.time ? new Date(b.data.time).getTime() : 0;
+                return timeA - timeB;
+            });
+
+            listContainer.innerHTML = "";
+
+            favItems.forEach((item) => {
+                const [type, id] = item.key.split(":");
+                const data = item.data;
+                const isFav = !!favorites[`${type}:${id}`];
+                const starImg = isFav ? "./star-fill.svg" : "./star.svg";
+
+                const cardElement = document.createElement("div");
+                cardElement.className = "card rounded-0 mb-2 shadow-sm";
+
+                let content = "";
+                let formattedTime = "";
+
+                if (data.time) {
+                    const dateObj = new Date(data.time);
+                    if (!isNaN(dateObj.getTime())) {
+                        formattedTime =
+                            dateObj.toLocaleDateString("en-US", {
+                                weekday: "short",
+                                month: "short",
+                                day: "numeric",
+                            }) +
+                            " " +
+                            dateObj.toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                            });
+                    } else {
+                        formattedTime = data.time;
+                    }
+                }
+
+                let modalAttributes = type === "talk" ? `role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#globalTalkModal" data-id="${id}"` : "";
+
+                content += `<div class="flex-grow-1 text-start" ${modalAttributes}>`;
+                content += `  <h6 class="${type === "talk" ? "mb-1 text-primary fw-bold" : "mb-1 text-success fw-bold"}">${data.title || 'Untitled'}</h6>`;
+
+                if (formattedTime) {
+                    content += `  <p class="mb-0 small text-muted"><img src="./calendar.svg" alt="Calendar" style="width: 14px; margin-right: 4px;" /> ${formattedTime}</p>`;
+                }
+                if (data.location) {
+                    content += `  <p class="mb-0 small text-muted"><img src="./geo-alt.svg" alt="Location" style="width: 14px; margin-right: 4px;" /> ${data.location}</p>`;
+                }
+                content += `</div>`;
+
+                content += `<div>`;
+                content += `  <button type="button" class="fav-btn btn btn-link p-0 ms-3"
+                            data-type="${type}"
+                            data-id="${id}"
+                            data-time="${data.time || ""}"
+                            data-location="${data.location || ""}"
+                            data-title="${(data.title || "").replace(/"/g, '&quot;')}"
+                            title="Favorite">
+                            <img src="${starImg}" alt="Favorite" />
+                          </button>`;
+                content += `</div>`;
+
+                const cardBody = document.createElement("div");
+                cardBody.className = "card-body d-flex justify-content-between align-items-center p-3";
+
+                cardBody.innerHTML = content;
+                cardElement.appendChild(cardBody);
+                listContainer.appendChild(cardElement);
+            });
+        }
+
+        function updateFavoriteIcons(type, id) {
+            const key = `${type}:${id}`;
+            const isFav = !!favorites[key];
+            const buttons = document.querySelectorAll(
+                `.fav-btn[data-type="${type}"][data-id="${id}"]`,
+            );
+            buttons.forEach((btn) => {
+                const img = btn.querySelector("img");
+                if (img) {
+                    img.src = isFav ? "./star-fill.svg" : "./star.svg";
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            showScheduleView();
             updatePlatformIcons();
 
-            // Initial render of favorite icons
             document.querySelectorAll(".fav-btn").forEach((btn) => {
                 updateFavoriteIcons(btn.dataset.type, btn.dataset.id);
             });
 
             const searchInput = document.getElementById("search-input");
             const tabElements = document.querySelectorAll(
-                'button[data-bs-toggle="pill"], a[data-bs-toggle="pill"]',
+                '#pills-tab button[data-bs-toggle="pill"]',
             );
 
             tabElements.forEach((tab) => {
-                tab.addEventListener("shown.bs.tab", function (event) {
-                    const activeTabId = event.target.id;
-
-                    if (activeTabId === "pills-authors-tab") {
-                        if (searchInput) searchInput.placeholder = "Search authors...";
-                        renderAuthorsSkeleton();
-                    } else if (searchInput) {
+                tab.addEventListener("shown.bs.tab", function () {
+                    if (searchInput) {
                         searchInput.placeholder = "Search talks by title or abstract...";
                     }
                 });
             });
 
-            // Favorite button click logic
+            // Global Favorite Click Handling
             document.body.addEventListener("click", (e) => {
                 const btn = e.target.closest(".fav-btn");
                 if (!btn) return;
 
                 const id = btn.dataset.id;
                 const type = btn.dataset.type;
+                if (!id || !type) return;
+
                 const key = `${type}:${id}`;
 
-                let labelText = "Favorite Item";
-                if (btn.dataset.title) {
-                    labelText = btn.dataset.title;
-                } else if (btn.parentElement?.querySelector("button")) {
-                    labelText = btn.parentElement.querySelector("button").innerText;
-                } else if (btn.closest(".d-flex")) {
-                    const otherBtn = btn.closest(".d-flex").querySelector("button");
-                    if (otherBtn) labelText = otherBtn.innerText;
+                let labelText = btn.dataset.title;
+                if (!labelText && type === "talk" && talkIndex[id]) {
+                    labelText = talkIndex[id].title;
                 }
+                if (!labelText) {
+                    const parent = btn.closest(".accordion-header, .d-flex, .modal-content");
+                    if (parent) {
+                        const titleEl = parent.querySelector(".fw-bold, button.pseudo-btn, h6, strong");
+                        if (titleEl) labelText = titleEl.innerText.trim();
+                    }
+                }
+                if (!labelText) labelText = "Untitled Item";
+
                 labelText = labelText.split("\n")[0];
 
                 if (favorites[key]) {
@@ -502,35 +636,35 @@
                 } else {
                     favorites[key] = {
                         title: labelText,
-                        time: btn.dataset.time || "",
-                        location: btn.dataset.location || "",
-                        timestamp: new Date().toLocaleString(),
+                        time: btn.dataset.time || (talkIndex[id] ? talkIndex[id].startdatetime : ""),
+                        location: btn.dataset.location || (talkIndex[id] ? talkIndex[id].location : ""),
+                        timestamp: new Date().toISOString(),
                     };
                 }
 
                 localStorage.setItem("conference_favorites", JSON.stringify(favorites));
                 updateFavoriteIcons(type, id);
 
-                const favsBtn = document.getElementById("btn-nav-favorites");
-                if (favsBtn && favsBtn.classList.contains("active-nav")) {
+                const favsView = document.getElementById("app-favorites-view");
+                if (favsView && favsView.style.display !== "none") {
                     renderFavoritesList();
                 }
             });
 
-            // Navigation Listeners
+            // Bottom Navigation Listeners
             document.getElementById("btn-nav-schedule")?.addEventListener("click", (e) => {
                 e.preventDefault();
-                if (mainContent) mainContent.style.display = "block";
-                if (favsZone) favsZone.style.display = "none";
-                setActiveNav("btn-nav-schedule");
+                showScheduleView();
+            });
+
+            document.getElementById("btn-nav-authors")?.addEventListener("click", (e) => {
+                e.preventDefault();
+                showAuthorsView();
             });
 
             document.getElementById("btn-nav-favorites")?.addEventListener("click", (e) => {
                 e.preventDefault();
-                if (mainContent) mainContent.style.display = "none";
-                if (favsZone) favsZone.style.display = "block";
-                renderFavoritesList();
-                setActiveNav("btn-nav-favorites");
+                showFavoritesView();
             });
 
             document.getElementById("btn-export-favorites")?.addEventListener("click", async () => {
@@ -542,23 +676,6 @@
                     alert("You don't have any favorited talks to export yet!");
                     return;
                 }
-
-                const convertAbstractToPlainText = (htmlString) => {
-                    if (!htmlString) return "";
-                    const doc = new DOMParser().parseFromString(htmlString, 'text/html');
-                    doc.querySelectorAll('p, div, br').forEach((el) => {
-                        if (el.tagName.toLowerCase() === 'br') {
-                            el.replaceWith('\n');
-                        } else {
-                            el.appendChild(doc.createTextNode('\n'));
-                        }
-                    });
-                    return doc.body.textContent
-                        .split('\n')
-                        .map((line) => line.trim())
-                        .filter((line) => line.length > 0)
-                        .join('\n');
-                };
 
                 let compiledTalks = talkKeys.map((key) => {
                     const [_, id] = key.split(":");
@@ -602,88 +719,9 @@
                     await copyToClipboardFallback(exportText, document.getElementById("btn-export-favorites"));
                 }
             });
-
-            function renderFavoritesList() {
-                const listContainer = document.getElementById("favorites-list");
-                if (!listContainer) return;
-
-                const keys = Object.keys(favorites || {});
-                if (keys.length === 0) {
-                    listContainer.innerHTML = '<p class="text-muted">No favorites yet.</p>';
-                    return;
-                }
-
-                let favItems = keys.map((key) => ({
-                    key: key,
-                    data: favorites[key] || {},
-                }));
-
-                favItems.sort((a, b) => new Date(a.data.time || 0) - new Date(b.data.time || 0));
-
-                listContainer.innerHTML = "";
-
-                favItems.forEach((item) => {
-                    const [type, id] = item.key.split(":");
-                    const data = item.data;
-                    const isFav = !!favorites[`${type}:${id}`];
-                    const starImg = isFav ? "./star-fill.svg" : "./star.svg";
-
-                    const cardElement = document.createElement("div");
-                    cardElement.className = "card rounded-0 mb-0";
-
-                    let content = "";
-                    let formattedTime = "";
-
-                    if (data.time) {
-                        const dateObj = new Date(data.time);
-                        formattedTime =
-                            dateObj.toLocaleDateString("en-US", {
-                                weekday: "long",
-                                month: "short",
-                                day: "numeric",
-                            }) +
-                            " - " +
-                            dateObj.toLocaleTimeString("en-US", {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                            });
-                    }
-
-                    let modalAttributes = type === "talk" ? `role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#globalTalkModal" data-id="${id}"` : "";
-                    content += `<div class="flex-grow-1 text-start" ${modalAttributes}>`;
-                    content += `  <h6 class="${type === "talk" ? "mb-1 text-primary" : "mb-1 text-success"}">${data.title || ''}</h6>`;
-
-                    if (data.time) {
-                        content += `  <p class="mb-0 small text-muted"><img src="./calendar.svg" alt="Calendar" /> ${formattedTime}</p>`;
-                    }
-                    if (data.location) {
-                        content += `  <p class="mb-0 small text-muted"><img src="./geo-alt.svg" alt="Location" /> ${data.location}</p>`;
-                    }
-                    content += `</div>`;
-
-                    content += `<div>`;
-                    content += `  <button type="button" class="fav-btn btn btn-link p-0 ms-3"
-                                data-type="${type}"
-                                data-id="${id}"
-                                data-time="${data.time || ""}"
-                                data-location="${data.location || ""}"
-                                data-title="${data.title || ""}"
-                                title="Favorite">
-                                <img src="${starImg}" alt="Favorite" />
-                              </button>`;
-                    content += `</div>`;
-
-                    const cardBody = document.createElement("div");
-                    cardBody.className = "card-body d-flex justify-content-between align-items-center";
-
-                    cardBody.innerHTML = content;
-                    cardElement.appendChild(cardBody);
-                    listContainer.appendChild(cardElement);
-                });
-            }
         });
 
-        // --- High-Performance On-Demand Author Rendering ---
+        // On-Demand Author Rendering
         let authorsRendered = false;
 
         function renderAuthorsSkeleton() {
@@ -739,7 +777,7 @@
             authorsRendered = true;
         }
 
-        // Lazy-load author details on expand
+        // Lazy-load author details
         document.getElementById("accordion-authors")?.addEventListener("show.bs.collapse", (e) => {
             const button = e.target.previousElementSibling?.querySelector(".accordion-button");
             if (!button) return;
@@ -795,20 +833,6 @@
                 });
             }
         });
-
-        function updateFavoriteIcons(type, id) {
-            const key = `${type}:${id}`;
-            const isFav = !!(favorites || {})[key];
-            const buttons = document.querySelectorAll(
-                `.fav-btn[data-type="${type}"][data-id="${id}"]`,
-            );
-            buttons.forEach((btn) => {
-                const img = btn.querySelector("img");
-                if (img) {
-                    img.src = isFav ? "./star-fill.svg" : "./star.svg";
-                }
-            });
-        }
 
         document.addEventListener("DOMContentLoaded", () => {
             const globalModal = document.getElementById('globalTalkModal');
@@ -952,9 +976,6 @@
             const routeType = parts[1];
             const id = parts[2];
 
-            const mainContent = document.getElementById("app-main-content");
-            const favsZone = document.getElementById("app-favorites-view");
-
             if (routeType === 'talk') {
                 const globalModal = document.getElementById('globalTalkModal');
                 if (globalModal) {
@@ -969,11 +990,7 @@
                     }
                 }
             } else if (routeType === 'session') {
-                if (mainContent && favsZone && mainContent.style.display === "none") {
-                    mainContent.style.display = "block";
-                    favsZone.style.display = "none";
-                    setActiveNav("btn-nav-schedule");
-                }
+                showScheduleView();
 
                 const element = document.querySelector(`.tab-content .tab-pane:not(#pills-authors) #collapse${id}`);
                 if (element) {
@@ -988,16 +1005,7 @@
                     }, 300);
                 }
             } else if (routeType === 'author') {
-                if (mainContent && favsZone && mainContent.style.display === "none") {
-                    mainContent.style.display = "block";
-                    favsZone.style.display = "none";
-                    setActiveNav("btn-nav-schedule");
-                }
-
-                renderAuthorsSkeleton();
-
-                const authorsTabTrigger = document.getElementById('pills-authors-tab');
-                if (authorsTabTrigger) bootstrap.Tab.getOrCreateInstance(authorsTabTrigger).show();
+                showAuthorsView();
 
                 const element = document.querySelector(`#accordion-authors #collapse${id}`);
                 if (element) {
@@ -1081,7 +1089,6 @@
             }
         });
 
-        // Universal Clipboard Copy Fallback (Supports non-secure HTTP connections)
         async function copyToClipboardFallback(textToCopy, btn) {
             try {
                 if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1110,8 +1117,6 @@
             }
         }
 
-        // Global Web Share Action Listener
-        // Global Web Share Action Listener (Supports Talk Abstracts, file:// & HTTP/HTTPS)
         document.body.addEventListener('click', async (e) => {
             const btn = e.target.closest('.share-btn, .copy-btn');
             if (!btn) return;
@@ -1144,26 +1149,22 @@
                 }
                 shareText = plainTextTitle;
             } else {
-                // e.g. session
                 shareText = plainTextTitle;
             }
 
             const shareUrl = `${window.location.origin}${window.location.pathname}#/${route}/${id}`;
             const fullSharePayloadText = shareText ? `${shareText}\n\n${shareUrl}` : shareUrl;
 
-            // Base share payload
             const shareData = {
                 title: plainTextTitle || "HBES 2027",
                 text: shareText
             };
 
-            // Safely parse URL and only assign `url` property if scheme is http: or https:
             try {
                 const parsedUrl = new URL(shareUrl, window.location.href);
                 if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
                     shareData.url = parsedUrl.href;
                 } else {
-                    // file:// or non-web schemes: append full payload text with URL
                     shareData.text = fullSharePayloadText;
                 }
             } catch (err) {

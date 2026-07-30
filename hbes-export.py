@@ -224,9 +224,9 @@ talk_keys = [
 talks = {k: sub_dict(talks[k], talk_keys) for k in talks.keys()}
 
 
-with open("index.indico.template", "r", encoding="utf-8") as file:
+with open("index.template", "r", encoding="utf-8") as file:
     template = Template(file.read())
-with open("docs/index.indico.html", "w", encoding="utf-8") as file:
+with open("docs/index.html", "w", encoding="utf-8") as file:
     file.write(
         template.render(
             conference_title=conference_title,

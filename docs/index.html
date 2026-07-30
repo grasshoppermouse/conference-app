@@ -875,11 +875,25 @@
             const authorsPane = document.getElementById("pills-authors");
             if (authorsPane && authorsPane.classList.contains("active")) {
                 authorsPane.classList.remove("show", "active");
+
+                // 1. Re-activate current Day pane
                 const activeDayBtn = document.querySelector('#pills-tab button.nav-link.active') || document.querySelector('#pills-tab button.nav-link');
                 if (activeDayBtn) {
                     const targetSelector = activeDayBtn.getAttribute("data-bs-target");
                     const targetPane = targetSelector ? document.querySelector(targetSelector) : null;
-                    if (targetPane) targetPane.classList.add("show", "active");
+                    if (targetPane) {
+                        targetPane.classList.add("show", "active");
+
+                        // 2. Re-activate active Morning/Afternoon session pane inside this day
+                        const activeSessionBtn = targetPane.querySelector('.nav-link.active, .btn.active') || targetPane.querySelector('.nav-link, .btn');
+                        if (activeSessionBtn) {
+                            const sessionSelector = activeSessionBtn.getAttribute("data-bs-target") || activeSessionBtn.getAttribute("href");
+                            const sessionPane = sessionSelector ? targetPane.querySelector(sessionSelector) || document.querySelector(sessionSelector) : null;
+                            if (sessionPane) {
+                                sessionPane.classList.add("show", "active");
+                            }
+                        }
+                    }
                 }
             }
 
@@ -899,7 +913,8 @@
             if (mapView) mapView.style.display = "none";
             if (pillsTab) pillsTab.style.display = "none";
 
-            document.querySelectorAll("#pills-tabContent .tab-pane").forEach((pane) => {
+            // Only target top-level day panes directly inside #pills-tabContent
+            document.querySelectorAll("#pills-tabContent > .tab-pane").forEach((pane) => {
                 pane.classList.remove("show", "active");
             });
 

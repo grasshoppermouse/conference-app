@@ -75,6 +75,23 @@
             content: counter(aff-counter) ". ";
             font-weight: 500;
         }
+
+        /* Sub-tab styling for Morning/Afternoon */
+        .sub-nav-pills .nav-link {
+            font-size: 0.875rem;
+            padding: 0.25rem 0.85rem;
+            border-radius: 20px;
+            color: #6c757d;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        .sub-nav-pills .nav-link.active {
+            color: #000;
+            background-color: #e9ecef;
+            border-color: #ced4da;
+            font-weight: 600;
+        }
     </style>
     <script src="html5-qrcode.min.js" type="text/javascript"></script>
 </head>
@@ -119,64 +136,100 @@
             {% for day in days %}
             <div class="tab-pane fade{% if loop.first %} show active{% endif %}" id="pills-{{day}}" role="tabpanel"
                 aria-labelledby="pills-{{day}}-tab" tabindex="0">
-                <div class="accordion" id="accordion{{day}}">
-                    {% for session in sessions[day] %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header d-flex justify-content-between align-items-center">
-                            <!-- Session details toggle button -->
-                            <button class="accordion-button collapsed flex-grow-1" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapse{{session.id}}" aria-expanded="false"
-                                aria-controls="collapse{{session.id}}">
-                                <div class="pe-2">
-                                    <span class="fw-bold d-block mb-1"
-                                        style="line-height: 1.3">{{session.slotTitle}}</span>
-                                    <small class="text-muted fw-normal">{{session.start_time}}.
-                                        {{session.location}}</small>
-                                </div>
-                            </button>
 
-                            <!-- Action Panel -->
-                            <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                style="min-width: 45px; z-index: 2">
-                                <button type="button" class="fav-btn p-1 mb-1" data-type="session"
-                                    data-id="{{session.id}}" data-title="{{session.slotTitle}}"
-                                    data-time="{{session.startdatetime}}" data-location="{{session.location}}"
-                                    title="Favorite">
-                                    <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
-                                </button>
+                <!-- Morning / Afternoon Sub Tabs -->
+                <ul class="nav nav-pills sub-nav-pills gap-2 mb-3" id="pills-{{day}}-period-tab" role="tablist">
+                    {% for period in ['Morning', 'Afternoon'] %}
+                    {% set period_slug = period | lower %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link{% if loop.first %} active{% endif %}"
+                            id="pills-{{day}}-{{period_slug}}-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-{{day}}-{{period_slug}}" type="button" role="tab"
+                            aria-controls="pills-{{day}}-{{period_slug}}"
+                            aria-selected="{% if loop.first %}true{% else %}false{% endif %}">
+                            {{period}}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
 
-                                <button type="button" class="btn btn-link p-1 text-muted share-btn" data-route="session"
-                                    data-id="{{session.id}}" data-title="{{session.slotTitle}}" title="Share Session">
-                                    <img class="share-icon" src="./share.svg" alt="Share" />
-                                </button>
-                            </div>
-                        </h2>
-                        <div id="collapse{{session.id}}" class="accordion-collapse collapse"
-                            data-bs-parent="#accordion{{day}}">
-                            <div class="accordion-body">
-                                {% for talk in session['talks'] %}
-                                <div class="d-flex align-items-center mb-2">
-                                    <button type="button" class="btn btn-light text-start pseudo-btn"
-                                        data-bs-toggle="modal" data-bs-target="#globalTalkModal"
-                                        data-time="{{talk.start_time}}. " data-title="{{talk.title}}"
-                                        data-meta="{{talk.day}}, {{talk.start_time}}. {{talk.location}}"
-                                        data-id="{{talk.id}}" data-location="{{talk.location}}"
-                                        data-datetime="{{talk.startdatetime}}">
-                                        {{talk.title}}
+                <!-- Sub Tab Content -->
+                <div class="tab-content" id="pills-{{day}}-period-tabContent">
+                    {% for period in ['Morning', 'Afternoon'] %}
+                    {% set period_slug = period | lower %}
+                    <div class="tab-pane fade{% if loop.first %} show active{% endif %}"
+                        id="pills-{{day}}-{{period_slug}}" role="tabpanel"
+                        aria-labelledby="pills-{{day}}-{{period_slug}}-tab" tabindex="0">
+
+                        <div class="accordion" id="accordion-{{day}}-{{period_slug}}">
+                            {% set period_sessions = sessions[day][period] if (sessions[day] is defined and
+                            sessions[day][period] is defined) else [] %}
+                            {% for session in period_sessions %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header d-flex justify-content-between align-items-center">
+                                    <!-- Session details toggle button -->
+                                    <button class="accordion-button collapsed flex-grow-1" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapse{{session.id}}"
+                                        aria-expanded="false" aria-controls="collapse{{session.id}}">
+                                        <div class="pe-2">
+                                            <span class="fw-bold d-block mb-1"
+                                                style="line-height: 1.3">{{session.slotTitle}}</span>
+                                            <small class="text-muted fw-normal">{{session.start_time}}.
+                                                {{session.location}}</small>
+                                        </div>
                                     </button>
-                                    <button type="button" class="btn btn-link p-0 text-muted ms-2 share-btn"
-                                        data-route="talk" data-id="{{talk.id}}" data-title="{{talk.title}}"
-                                        title="Share Talk">
-                                        <img class="share-icon" src="./share.svg" alt="Share" />
-                                    </button>
-                                    <button type="button" class="fav-btn" data-type="talk" data-id="{{talk.id}}"
-                                        data-title="{{talk.title}}" data-time="{{talk.startdatetime}}"
-                                        data-location="{{talk.location}}" title="Favorite">
-                                        <img src="./star.svg" alt="Favorite" />
-                                    </button>
+
+                                    <!-- Action Panel -->
+                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
+                                        style="min-width: 45px; z-index: 2">
+                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                            data-id="{{session.id}}" data-title="{{session.slotTitle}}"
+                                            data-time="{{session.startdatetime}}" data-location="{{session.location}}"
+                                            title="Favorite">
+                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                        </button>
+
+                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
+                                            data-route="session" data-id="{{session.id}}"
+                                            data-title="{{session.slotTitle}}" title="Share Session">
+                                            <img class="share-icon" src="./share.svg" alt="Share" />
+                                        </button>
+                                    </div>
+                                </h2>
+                                <div id="collapse{{session.id}}" class="accordion-collapse collapse"
+                                    data-bs-parent="#accordion-{{day}}-{{period_slug}}">
+                                    <div class="accordion-body">
+                                        {% for talk in session['talks'] %}
+                                        <div class="d-flex align-items-center mb-2">
+                                            <button type="button" class="btn btn-light text-start pseudo-btn"
+                                                data-bs-toggle="modal" data-bs-target="#globalTalkModal"
+                                                data-time="{{talk.start_time}}. " data-title="{{talk.title}}"
+                                                data-meta="{{talk.day}}, {{talk.start_time}}. {{talk.location}}"
+                                                data-id="{{talk.id}}" data-location="{{talk.location}}"
+                                                data-datetime="{{talk.startdatetime}}"
+                                                data-abstract="{{ talk.abstract | default('') | e }}">
+                                                {{talk.title}}
+                                            </button>
+                                            <button type="button" class="btn btn-link p-0 text-muted ms-2 share-btn"
+                                                data-route="talk" data-id="{{talk.id}}" data-title="{{talk.title}}"
+                                                title="Share Talk">
+                                                <img class="share-icon" src="./share.svg" alt="Share" />
+                                            </button>
+                                            <button type="button" class="fav-btn" data-type="talk" data-id="{{talk.id}}"
+                                                data-title="{{talk.title}}" data-time="{{talk.startdatetime}}"
+                                                data-location="{{talk.location}}" title="Favorite">
+                                                <img src="./star.svg" alt="Favorite" />
+                                            </button>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                                {% endfor %}
                             </div>
+                            {% else %}
+                            <div class="text-center py-4 text-muted">
+                                <small>No {{period | lower}} sessions scheduled for {{day}}.</small>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                     {% endfor %}
@@ -210,6 +263,16 @@
         <div id="favorites-list"></div>
     </div>
 
+    <!-- View for Map -->
+    <div id="app-map-view" class="container-fluid pt-3" style="display: none">
+        <div class="px-2 mb-4">
+            <h3 class="m-0">Venue Map</h3>
+        </div>
+        <div class="text-center py-3">
+            <img src="./map.svg" class="img-fluid" alt="Venue Map" style="max-width: 100%; height: auto;" />
+        </div>
+    </div>
+
     <!-- Bottom Navigation Bar -->
     <nav class="fixed-bottom bg-white border-top shadow-sm" style="height: 60px">
         <div class="container d-flex justify-content-around align-items-center">
@@ -224,6 +287,11 @@
             <a href="#" id="btn-nav-favorites" class="text-decoration-none text-muted text-center nav-link-btn">
                 <img src="./star.svg" class="fs-4" alt="Star" />
                 <div style="font-size: 10px">Favorites</div>
+            </a>
+            <!-- Added Map Button -->
+            <a href="#" id="btn-nav-map" class="text-decoration-none text-muted text-center nav-link-btn">
+                <img src="./map.svg" class="fs-4" alt="Map" />
+                <div style="font-size: 10px">Map</div>
             </a>
         </div>
     </nav>
@@ -278,10 +346,18 @@
         const isAppleDevice = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
         const shareIconSrc = isAppleDevice ? "./box-arrow-up.svg" : "./share.svg";
 
-        // Global State & Data Deserialization
+        // Global State & Pre-serialized JSON setup
         let favorites = JSON.parse(localStorage.getItem("conference_favorites") || "{}") || {};
         let talkIndex = {{ talks | default ('{}') | safe }};
         let authorIndex = {{ authors | default ('{}') | safe }};
+
+        function getTalkById(id) {
+            if (!id || !talkIndex) return null;
+            if (talkIndex[id]) return talkIndex[id];
+            if (talkIndex[String(id)]) return talkIndex[String(id)];
+            const values = Array.isArray(talkIndex) ? talkIndex : Object.values(talkIndex);
+            return values.find(t => t && String(t.id) === String(id)) || null;
+        }
 
         function updatePlatformIcons() {
             document.querySelectorAll(".share-icon").forEach((img) => {
@@ -310,10 +386,12 @@
             const scheduleBtn = document.getElementById("btn-nav-schedule");
             const authorsBtn = document.getElementById("btn-nav-authors");
             const favsBtn = document.getElementById("btn-nav-favorites");
+            const mapBtn = document.getElementById("btn-nav-map");
 
             if (scheduleBtn) scheduleBtn.classList.remove("active-nav");
             if (authorsBtn) authorsBtn.classList.remove("active-nav");
             if (favsBtn) favsBtn.classList.remove("active-nav");
+            if (mapBtn) mapBtn.classList.remove("active-nav");
 
             const activeBtn = document.getElementById(btnId);
             if (activeBtn) activeBtn.classList.add("active-nav");
@@ -322,11 +400,13 @@
         function showScheduleView() {
             const mainContent = document.getElementById("app-main-content");
             const favsZone = document.getElementById("app-favorites-view");
+            const mapView = document.getElementById("app-map-view");
             const pillsTab = document.getElementById("pills-tab");
             const searchInput = document.getElementById("search-input");
 
             if (mainContent) mainContent.style.display = "block";
             if (favsZone) favsZone.style.display = "none";
+            if (mapView) mapView.style.display = "none";
             if (pillsTab) pillsTab.style.display = "flex";
 
             const authorsPane = document.getElementById("pills-authors");
@@ -347,11 +427,13 @@
         function showAuthorsView() {
             const mainContent = document.getElementById("app-main-content");
             const favsZone = document.getElementById("app-favorites-view");
+            const mapView = document.getElementById("app-map-view");
             const pillsTab = document.getElementById("pills-tab");
             const searchInput = document.getElementById("search-input");
 
             if (mainContent) mainContent.style.display = "block";
             if (favsZone) favsZone.style.display = "none";
+            if (mapView) mapView.style.display = "none";
             if (pillsTab) pillsTab.style.display = "none";
 
             document.querySelectorAll("#pills-tabContent .tab-pane").forEach((pane) => {
@@ -369,11 +451,24 @@
         function showFavoritesView() {
             const mainContent = document.getElementById("app-main-content");
             const favsZone = document.getElementById("app-favorites-view");
+            const mapView = document.getElementById("app-map-view");
 
             if (mainContent) mainContent.style.display = "none";
             if (favsZone) favsZone.style.display = "block";
+            if (mapView) mapView.style.display = "none";
             renderFavoritesList();
             setActiveNav("btn-nav-favorites");
+        }
+
+        function showMapView() {
+            const mainContent = document.getElementById("app-main-content");
+            const favsZone = document.getElementById("app-favorites-view");
+            const mapView = document.getElementById("app-map-view");
+
+            if (mainContent) mainContent.style.display = "none";
+            if (favsZone) favsZone.style.display = "none";
+            if (mapView) mapView.style.display = "block";
+            setActiveNav("btn-nav-map");
         }
 
         function renderFavoritesList() {
@@ -511,10 +606,11 @@
                 if (!id || !type) return;
 
                 const key = `${type}:${id}`;
+                const talkData = getTalkById(id);
 
                 let labelText = btn.dataset.title;
-                if (!labelText && type === "talk" && talkIndex[id]) {
-                    labelText = talkIndex[id].title;
+                if (!labelText && type === "talk" && talkData) {
+                    labelText = talkData.title;
                 }
                 if (!labelText) {
                     const parent = btn.closest(".accordion-header, .d-flex, .modal-content");
@@ -532,8 +628,8 @@
                 } else {
                     favorites[key] = {
                         title: labelText,
-                        time: btn.dataset.time || (talkIndex[id] ? talkIndex[id].startdatetime : ""),
-                        location: btn.dataset.location || (talkIndex[id] ? talkIndex[id].location : ""),
+                        time: btn.dataset.time || (talkData ? talkData.startdatetime : ""),
+                        location: btn.dataset.location || (talkData ? talkData.location : ""),
                         timestamp: new Date().toISOString(),
                     };
                 }
@@ -563,6 +659,11 @@
                 showFavoritesView();
             });
 
+            document.getElementById("btn-nav-map")?.addEventListener("click", (e) => {
+                e.preventDefault();
+                showMapView();
+            });
+
             document.getElementById("btn-export-favorites")?.addEventListener("click", async () => {
                 const storedFavs = JSON.parse(localStorage.getItem("conference_favorites") || "{}") || {};
                 const keys = Object.keys(storedFavs);
@@ -575,15 +676,17 @@
 
                 let compiledTalks = talkKeys.map((key) => {
                     const [_, id] = key.split(":");
-                    const talkData = (talkIndex || {})[id];
+                    const talkData = getTalkById(id);
                     const favItem = storedFavs[key] || {};
+
+                    const rawAbstract = talkData ? (talkData.abstract || talkData.description || talkData.content) : "";
 
                     return {
                         time: talkData ? talkData.startdatetime : favItem.time || "",
                         metaTime: talkData ? `${talkData.day || ''}, ${talkData.start_time || ''}` : "",
                         location: talkData ? talkData.location : favItem.location || "",
-                        formattedContent: talkData && talkData.abstract
-                            ? convertAbstractToPlainText(talkData.abstract)
+                        formattedContent: rawAbstract
+                            ? convertAbstractToPlainText(rawAbstract)
                             : `📌 ${favItem.title || 'Talk'}`
                     };
                 });
@@ -627,38 +730,50 @@
 
             const fragment = document.createDocumentFragment();
 
-            const sortedAuthors = Object.values(authorIndex || {}).sort((a, b) => {
-                const lastNameCompare = (a?.last_name || "").localeCompare(b?.last_name || "");
-                if (lastNameCompare !== 0) return lastNameCompare;
-                return (a?.first_name || "").localeCompare(b?.first_name || "");
-            });
+            const sortedAuthors = Object.values(authorIndex || {})
+                .filter((author) => {
+                    if (!author) return false;
+                    const fullName = (author.first_name || author.last_name)
+                        ? `${author.first_name || ''} ${author.last_name || ''}`.trim()
+                        : (author.name || author.full_name || '').trim();
+                    return fullName.length > 0;
+                })
+                .sort((a, b) => {
+                    const lastNameCompare = (a?.last_name || a?.name || "").localeCompare(b?.last_name || b?.name || "");
+                    if (lastNameCompare !== 0) return lastNameCompare;
+                    return (a?.first_name || "").localeCompare(b?.first_name || "");
+                });
 
             sortedAuthors.forEach((author) => {
-                if (!author) return;
-                const fullName = `${author.first_name || ''} ${author.last_name || ''}`.trim();
+                const fullName = (author.first_name || author.last_name)
+                    ? `${author.first_name || ''} ${author.last_name || ''}`.trim()
+                    : (author.name || author.full_name || '').trim();
+                const authorId = author.person_id || author.id;
+                if (!authorId) return;
+
                 const item = document.createElement("div");
                 item.className = "accordion-item";
-                item.setAttribute("id", `author-row-${author.person_id}`);
-                item.setAttribute("data-id", author.person_id);
+                item.setAttribute("id", `author-row-${authorId}`);
+                item.setAttribute("data-id", authorId);
                 item.setAttribute("data-name", fullName);
 
                 item.innerHTML = `
     <h2 class="accordion-header d-flex justify-content-between align-items-center">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapse${author.person_id}" aria-expanded="false"
-            aria-controls="collapse${author.person_id}" data-author-id="${author.person_id}">
+            data-bs-target="#collapse${authorId}" aria-expanded="false"
+            aria-controls="collapse${authorId}" data-author-id="${authorId}">
             <div class="text-start">
                 <strong>${fullName}</strong><br />
                 <small class="text-muted fw-normal">${author.affiliation || ''}</small>
             </div>
         </button>
-        <button type="button" class="btn btn-link p-0 text-muted me-3 share-btn" data-route="author" data-id="${author.person_id}" data-title="${fullName}" title="Share Author">
+        <button type="button" class="btn btn-link p-0 text-muted me-3 share-btn" data-route="author" data-id="${authorId}" data-title="${fullName}" title="Share Author">
             <img class="share-icon" src="${shareIconSrc}" alt="Share" />
         </button>
     </h2>
-    <div id="collapse${author.person_id}" class="accordion-collapse collapse"
+    <div id="collapse${authorId}" class="accordion-collapse collapse"
         data-bs-parent="#accordion-authors">
-        <div class="accordion-body" id="author-body-${author.person_id}">
+        <div class="accordion-body" id="author-body-${authorId}">
             <div class="text-center py-2">
                 <div class="spinner-border spinner-border-sm text-muted" role="status"></div>
             </div>
@@ -682,7 +797,7 @@
             const bodyZone = document.getElementById(`author-body-${authorId}`);
 
             if (bodyZone && bodyZone.querySelector(".spinner-border")) {
-                const author = (authorIndex || {})[authorId];
+                const author = (authorIndex || {})[authorId] || Object.values(authorIndex || {}).find(a => String(a?.person_id || a?.id) === String(authorId));
                 if (!author || !author.presentations || author.presentations.length === 0) {
                     bodyZone.innerHTML = '<p class="text-muted small mb-0">No sessions listed.</p>';
                     return;
@@ -701,16 +816,17 @@
                 }
 
                 author.presentations.forEach((talkId) => {
-                    const talk = (talkIndex || {})[talkId];
+                    const talk = getTalkById(talkId);
                     if (!talk) return;
 
                     const safeTitle = (talk.title || "").replace(/"/g, '&quot;');
+                    const safeAbstract = (talk.abstract || talk.description || talk.content || "").replace(/"/g, '&quot;');
                     const dayTimeLoc = `${talk.day || ''}, ${talk.start_time || ''}${talk.location ? '. ' + talk.location : ''}`;
 
                     html += `
         <div class="d-flex align-items-center mb-2">
             <button type="button" class="btn btn-light text-start author-talk-btn"
-                data-bs-toggle="modal" data-bs-target="#globalTalkModal" data-id="${talk.id}">
+                data-bs-toggle="modal" data-bs-target="#globalTalkModal" data-id="${talk.id}" data-abstract="${safeAbstract}">
                 ${dayTimeLoc}. <strong>${talk.title}</strong>
             </button>
             <button type="button" class="btn btn-link p-0 text-muted ms-2 share-btn" data-route="talk" data-id="${talk.id}" data-title="${safeTitle}" title="Share Talk">
@@ -741,15 +857,17 @@
                         window.location.hash = `#/talk/${id}`;
                     }
 
-                    const talkData = (talkIndex || {})[id];
+                    const talkData = getTalkById(id);
                     const metaNode = document.getElementById('modal-talk-meta');
                     const abstractNode = document.getElementById('modal-talk-abstract');
                     const modalFavBtn = document.getElementById('modal-fav-btn');
                     const modalCopyBtn = document.getElementById('modal-copy-btn');
 
+                    const rawAbstract = (talkData && (talkData.abstract || talkData.description || talkData.content)) ||
+                        (button ? button.getAttribute('data-abstract') : "") || "";
+
                     if (talkData) {
-                        if (metaNode) metaNode.textContent = `${talkData.day || ''}, ${talkData.start_time || ''}. ${talkData.location || ''}`;
-                        if (abstractNode) abstractNode.innerHTML = talkData.abstract || "<p>Abstract not provided.</p>";
+                        if (metaNode) metaNode.textContent = `${talkData.day || ''}, ${talkData.start_time || ''}${talkData.location ? '. ' + talkData.location : ''}`;
 
                         modalFavBtn?.setAttribute('data-id', talkData.id);
                         modalFavBtn?.setAttribute('data-title', talkData.title || '');
@@ -758,17 +876,20 @@
 
                         modalCopyBtn?.setAttribute('data-id', talkData.id);
                         modalCopyBtn?.setAttribute('data-title', talkData.title || '');
-                    } else {
-                        if (metaNode) metaNode.textContent = button ? button.getAttribute('data-meta') || "" : "";
-                        if (abstractNode) abstractNode.innerHTML = button ? button.getAttribute('data-abstract') || "<p>Abstract not found.</p>" : "<p>Abstract not found.</p>";
+                    } else if (button) {
+                        if (metaNode) metaNode.textContent = button.getAttribute('data-meta') || "";
 
                         modalFavBtn?.setAttribute('data-id', id);
-                        modalFavBtn?.setAttribute('data-title', button ? button.getAttribute('data-title') || "" : "");
-                        modalFavBtn?.setAttribute('data-time', button ? (button.getAttribute('data-time') || button.getAttribute('data-datetime')) || "" : "");
-                        modalFavBtn?.setAttribute('data-location', button ? button.getAttribute('data-location') || "" : "");
+                        modalFavBtn?.setAttribute('data-title', button.getAttribute('data-title') || "");
+                        modalFavBtn?.setAttribute('data-time', button.getAttribute('data-time') || button.getAttribute('data-datetime') || "");
+                        modalFavBtn?.setAttribute('data-location', button.getAttribute('data-location') || "");
 
                         modalCopyBtn?.setAttribute('data-id', id);
-                        modalCopyBtn?.setAttribute('data-title', button ? button.getAttribute('data-title') || "" : "");
+                        modalCopyBtn?.setAttribute('data-title', button.getAttribute('data-title') || "");
+                    }
+
+                    if (abstractNode) {
+                        abstractNode.innerHTML = rawAbstract ? rawAbstract : "<p>Abstract not provided.</p>";
                     }
 
                     updateFavoriteIcons('talk', id);
@@ -791,7 +912,7 @@
                     if (isAuthorsView) {
                         results = Object.values(authorIndex || {}).filter((author) => {
                             if (!author) return false;
-                            const fullName = `${author.first_name || ''} ${author.last_name || ''}`.toLowerCase();
+                            const fullName = `${author.first_name || author.name || ''} ${author.last_name || ''}`.toLowerCase();
                             const affiliation = (author.affiliation || "").toLowerCase();
                             return fullName.includes(query) || affiliation.includes(query);
                         });
@@ -813,9 +934,10 @@
                         resultItem.dataset.isAuthor = isAuthorsView ? "true" : "false";
 
                         if (isAuthorsView) {
-                            resultItem.innerHTML = `<span class="text-start">${item.first_name || ''} ${item.last_name || ''}</span>`;
+                            const name = `${item.first_name || item.name || ''} ${item.last_name || ''}`.trim();
+                            resultItem.innerHTML = `<span class="text-start">${name}</span>`;
                         } else {
-                            resultItem.innerHTML = `<span class="text-start">${item.day} ${item.start_time}: ${item.title || ''}</span>`;
+                            resultItem.innerHTML = `<span class="text-start">${item.day || ''} ${item.start_time || ''}: ${item.title || ''}</span>`;
                         }
                         searchResults.appendChild(resultItem);
                     });
@@ -890,11 +1012,16 @@
 
                 const element = document.querySelector(`.tab-content .tab-pane:not(#pills-authors) #collapse${id}`);
                 if (element) {
-                    const tabPane = element.closest('.tab-pane');
-                    if (tabPane) {
-                        const tabTrigger = document.querySelector(`button[data-bs-target="#${tabPane.id}"]`);
-                        if (tabTrigger) bootstrap.Tab.getOrCreateInstance(tabTrigger).show();
+                    // Activate parent nested tabs up the DOM tree
+                    let current = element.parentElement;
+                    while (current && !current.classList.contains('container-fluid')) {
+                        if (current.classList.contains('tab-pane')) {
+                            const tabTrigger = document.querySelector(`button[data-bs-target="#${current.id}"]`);
+                            if (tabTrigger) bootstrap.Tab.getOrCreateInstance(tabTrigger).show();
+                        }
+                        current = current.parentElement;
                     }
+
                     bootstrap.Collapse.getOrCreateInstance(element).show();
                     setTimeout(() => {
                         element.closest('.accordion-item')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1028,9 +1155,9 @@
             let shareText = "";
 
             if (route === "talk") {
-                const talkData = (talkIndex || {})[id];
+                const talkData = getTalkById(id);
                 plainTextTitle = plainTextTitle || talkData?.title || "";
-                const rawAbstract = talkData?.abstract || btn.dataset.abstract || "";
+                const rawAbstract = (talkData && (talkData.abstract || talkData.description || talkData.content)) || btn.dataset.abstract || "";
                 const plainAbstract = convertAbstractToPlainText(rawAbstract);
 
                 if (plainTextTitle && plainAbstract) {
@@ -1040,8 +1167,8 @@
                 }
             } else if (route === "author") {
                 if (!plainTextTitle) {
-                    const author = (authorIndex || {})[id];
-                    plainTextTitle = author ? `${author.first_name || ''} ${author.last_name || ''}`.trim() : "";
+                    const author = (authorIndex || {})[id] || Object.values(authorIndex || {}).find(a => String(a?.person_id || a?.id) === String(id));
+                    plainTextTitle = author ? `${author.first_name || author.name || ''} ${author.last_name || ''}`.trim() : "";
                 }
                 shareText = plainTextTitle;
             } else {

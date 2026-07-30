@@ -77,9 +77,8 @@ conference["sessions"].sort(key=startDatekey)
 for session in conference["sessions"]:
     session["contributions"].sort(key=startDatekey)
 
+
 # Create presentations list
-
-
 def format_authors_and_affiliations(primaryauthors, coauthors):
     authors = primaryauthors + coauthors
     affiliation_map = {}  # Tracks { "University Name": 1 }
@@ -142,7 +141,12 @@ def sub_dict(d, keys):
     return {k: d[k] for k in keys}
 
 
-sessions = {"Wed": [], "Thu": [], "Fri": [], "Sat": []}
+sessions = {
+    "Wed": {"Morning": [], "Afternoon": []},
+    "Thu": {"Morning": [], "Afternoon": []},
+    "Fri": {"Morning": [], "Afternoon": []},
+    "Sat": {"Morning": [], "Afternoon": []},
+}
 
 author_keys = ["first_name", "last_name", "affiliation", "person_id", "email"]
 authors = {}
@@ -153,6 +157,9 @@ for session in conference["sessions"]:
     session["start_time"] = session["startdatetime"].strftime("%I:%M %p")
     session["end_time"] = session["enddatetime"].strftime("%I:%M %p")
     session["day"] = session["startdatetime"].strftime("%a")
+    session["morning_afternoon"] = (
+        "Morning" if session["startdatetime"].hour < 12 else "Afternoon"
+    )
     session["location"] = session.pop("room")
     for contribution in session["contributions"]:
         contribution["session_id"] = session["id"]
@@ -184,7 +191,7 @@ for session in conference["sessions"]:
             else:
                 authors[author["person_id"]]["presentations"].append(contribution["id"])
     session["talks"] = session.pop("contributions")
-    sessions[session["day"]].append(session)
+    sessions[session["day"]][session["morning_afternoon"]].append(session)
 
 authors = dict(
     sorted(

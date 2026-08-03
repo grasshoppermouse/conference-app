@@ -58,6 +58,22 @@
             transform: scale(0.85);
         }
 
+        .accordion-button:disabled {
+            background-color: #f8f9fa;
+            /* Light gray background */
+            color: #6c757d;
+            /* Gray text (text-muted color) */
+            cursor: not-allowed;
+            /* Shows a blocked cursor on hover */
+            box-shadow: none;
+            /* Removes the active blue border glow */
+        }
+
+        /* Hide the arrow toggle icon */
+        .accordion-button:disabled::after {
+            background-image: none;
+        }
+
         ol.affiliations {
             list-style: none;
             padding: 0;
@@ -92,6 +108,34 @@
             border-color: #ced4da;
             font-weight: 600;
         }
+
+        .action-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            /* Fixed width ensures consistent centering */
+        }
+
+        .action-panel .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .action-panel img,
+        .action-panel .share-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            display: block;
+        }
     </style>
     <script src="html5-qrcode.min.js" type="text/javascript"></script>
 </head>
@@ -116,8 +160,8 @@
                 </div>
                 <div id="search-results" class="list-group mt-2" style="max-height: 300px; overflow-y: auto"></div>
             </div>
-            {% set days = ['Wed', 'Thu', 'Fri', 'Sat'] %}
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            {% set days = sessions.keys() %}
+            <ul class="nav nav-pills flex-nowrap overflow-x-auto text-nowrap mb-3" id="pills-tab" role="tablist">
                 {% for day in days %}
                 <li class="nav-item" role="presentation">
                     <button class="nav-link{% if loop.first %} active{% endif %}" id="pills-{{day}}-tab"
@@ -165,15 +209,17 @@
                             {% set period_sessions = sessions[day][period] if (sessions[day] is defined and
                             sessions[day][period] is defined) else [] %}
                             {% for session in period_sessions %}
+                            {% if session["entryType"] == "Session" %}
                             <div class="accordion-item">
                                 <h2 class="accordion-header d-flex justify-content-between align-items-center">
                                     <!-- Session details toggle button -->
                                     <button class="accordion-button collapsed flex-grow-1" type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapse{{session.id}}"
-                                        aria-expanded="false" aria-controls="collapse{{session.id}}">
+                                        aria-expanded="false" aria-controls="collapse{{session.id}}" {% if
+                                        session["talks"]|length==0 %}disabled{% endif %}>
                                         <div class="pe-2">
                                             <span class="fw-bold d-block mb-1"
-                                                style="line-height: 1.3">{{session.slotTitle}}</span>
+                                                style="line-height: 1.3">{{session.title}}</span>
                                             <small class="text-muted fw-normal">{{session.start_time}}.
                                                 {{session.location}}</small>
                                         </div>
@@ -200,24 +246,19 @@
                                     data-bs-parent="#accordion-{{day}}-{{period_slug}}">
                                     <div class="accordion-body">
                                         {% for talk in session['talks'] %}
+                                        <!-- Cleaned Talk Entry -->
                                         <div class="d-flex align-items-center mb-2">
                                             <button type="button" class="btn btn-light text-start pseudo-btn"
                                                 data-bs-toggle="modal" data-bs-target="#globalTalkModal"
-                                                data-time="{{talk.start_time}}. " data-title="{{talk.title}}"
-                                                data-meta="{{talk.day}}, {{talk.start_time}}. {{talk.location}}"
-                                                data-id="{{talk.id}}" data-location="{{talk.location}}"
-                                                data-datetime="{{talk.startdatetime}}"
-                                                data-abstract="{{ talk.abstract | default('') | e }}">
+                                                data-id="{{talk.id}}" data-time="{{talk.start_time}}. ">
                                                 {{talk.title}}
                                             </button>
                                             <button type="button" class="btn btn-link p-0 text-muted ms-2 share-btn"
-                                                data-route="talk" data-id="{{talk.id}}" data-title="{{talk.title}}"
-                                                title="Share Talk">
+                                                data-route="talk" data-id="{{talk.id}}" title="Share Talk">
                                                 <img class="share-icon" src="./share.svg" alt="Share" />
                                             </button>
                                             <button type="button" class="fav-btn" data-type="talk" data-id="{{talk.id}}"
-                                                data-title="{{talk.title}}" data-time="{{talk.startdatetime}}"
-                                                data-location="{{talk.location}}" title="Favorite">
+                                                title="Favorite">
                                                 <img src="./star.svg" alt="Favorite" />
                                             </button>
                                         </div>
@@ -225,6 +266,39 @@
                                     </div>
                                 </div>
                             </div>
+                            {% elif session["entryType"] == "Contribution" %}
+                            <div class="d-flex align-items-center mb-2">
+                                <button type="button" class="btn btn-light text-start pseudo-btn" data-bs-toggle="modal"
+                                    data-bs-target="#globalTalkModal" data-time="{{session.start_time}}. "
+                                    data-title="{{session.title}}"
+                                    data-meta="{{session.day}}, {{session.start_time}}. {{session.location}}"
+                                    data-id="{{session.id}}" data-location="{{session.location}}"
+                                    data-datetime="{{session.startdatetime}}"
+                                    data-abstract="{{ session.abstract | default('') | e }}">
+                                    {{session.title}}
+                                </button>
+                                <button type="button" class="btn btn-link p-0 text-muted ms-2 share-btn"
+                                    data-route="talk" data-id="{{session.id}}" data-title="{{session.title}}"
+                                    title="Share Talk">
+                                    <img class="share-icon" src="./share.svg" alt="Share" />
+                                </button>
+                                <button type="button" class="fav-btn" data-type="talk" data-id="{{session.id}}"
+                                    data-title="{{session.title}}" data-time="{{session.startdatetime}}"
+                                    data-location="{{session.location}}" title="Favorite">
+                                    <img src="./star.svg" alt="Favorite" />
+                                </button>
+                            </div>
+                            {% else %}
+
+                            <div class="card rounded-0">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{session.title}}</h6>
+                                    <h7 class="card-subtitle mb-2 text-muted">{{session.start_time}}
+                                        {{session.location}}</h7>
+                                </div>
+                            </div>
+
+                            {% endif %}
                             {% else %}
                             <div class="text-center py-4 text-muted">
                                 <small>No {{period | lower}} sessions scheduled for {{day}}.</small>
@@ -748,20 +822,20 @@
             const sortedAuthors = Object.values(authorIndex || {})
                 .filter((author) => {
                     if (!author) return false;
-                    const fullName = (author.first_name || author.last_name)
-                        ? `${author.first_name || ''} ${author.last_name || ''}`.trim()
+                    const fullName = (author.firstName || author.familyName)
+                        ? `${author.firstName || ''} ${author.familyName || ''}`.trim()
                         : (author.name || author.full_name || '').trim();
                     return fullName.length > 0;
                 })
                 .sort((a, b) => {
-                    const lastNameCompare = (a?.last_name || a?.name || "").localeCompare(b?.last_name || b?.name || "");
+                    const lastNameCompare = (a?.familyName || a?.name || "").localeCompare(b?.familyName || b?.name || "");
                     if (lastNameCompare !== 0) return lastNameCompare;
-                    return (a?.first_name || "").localeCompare(b?.first_name || "");
+                    return (a?.firstName || "").localeCompare(b?.firstName || "");
                 });
 
             sortedAuthors.forEach((author) => {
-                const fullName = (author.first_name || author.last_name)
-                    ? `${author.first_name || ''} ${author.last_name || ''}`.trim()
+                const fullName = (author.firstName || author.familyName)
+                    ? `${author.firstName || ''} ${author.familyName || ''}`.trim()
                     : (author.name || author.full_name || '').trim();
                 const authorId = author.person_id || author.id;
                 if (!authorId) return;
@@ -927,7 +1001,7 @@
                     if (isAuthorsView) {
                         results = Object.values(authorIndex || {}).filter((author) => {
                             if (!author) return false;
-                            const fullName = `${author.first_name || author.name || ''} ${author.last_name || ''}`.toLowerCase();
+                            const fullName = `${author.firstName || author.name || ''} ${author.familyName || ''}`.toLowerCase();
                             const affiliation = (author.affiliation || "").toLowerCase();
                             return fullName.includes(query) || affiliation.includes(query);
                         });
@@ -949,10 +1023,10 @@
                         resultItem.dataset.isAuthor = isAuthorsView ? "true" : "false";
 
                         if (isAuthorsView) {
-                            const name = `${item.first_name || item.name || ''} ${item.last_name || ''}`.trim();
+                            const name = `${item.firstName || item.name || ''} ${item.familyName || ''}`.trim();
                             resultItem.innerHTML = `<span class="text-start">${name}</span>`;
                         } else {
-                            resultItem.innerHTML = `<span class="text-start">${item.day || ''} ${item.start_time || ''}: ${item.title || ''}</span>`;
+                            resultItem.innerHTML = `<span class="text-start">${item.day || ''} ${item.start_time || ''} ${item.location || ''}: ${item.title || ''}</span>`;
                         }
                         searchResults.appendChild(resultItem);
                     });
@@ -1183,7 +1257,7 @@
             } else if (route === "author") {
                 if (!plainTextTitle) {
                     const author = (authorIndex || {})[id] || Object.values(authorIndex || {}).find(a => String(a?.person_id || a?.id) === String(id));
-                    plainTextTitle = author ? `${author.first_name || author.name || ''} ${author.last_name || ''}`.trim() : "";
+                    plainTextTitle = author ? `${author.firstName || author.name || ''} ${author.familyName || ''}`.trim() : "";
                 }
                 shareText = plainTextTitle;
             } else {

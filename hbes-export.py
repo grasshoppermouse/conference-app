@@ -38,49 +38,57 @@ def startDatekey(item):
     return dict2datetime(item["startDate"])
 
 
-# Define the Indico server and the specific event ID you want to fetch
-server_url = "https://indico.global"
-endpoint = f"/export/event/{EVENT_ID}.json"
-
-# Complete URL
-url = f"{server_url}{endpoint}"
-
-# Set up the standard Authorization header
-headers = {"Authorization": f"Bearer {API_TOKEN}", "Accept": "application/json"}
-
 # Optional parameters (e.g., to include daily occurrences or details)
-params = {
+# These are for the events endpoint (not timetable)
+event_params = {
     "occ": "yes",  # Includes daily event times
     "detail": "sessions",
 }
 
-try:
-    response = requests.get(url, headers=headers, params=params)
 
-    # Check if the request was successful
-    if response.status_code == 200:
-        data = response.json()
-    else:
-        print(f"Failed to fetch event. Status code: {response.status_code}")
-        print(response.text)
+def get_response(endpoint, params):
+    server_url = "https://indico.global"
+    # Complete URL
+    url = f"{server_url}{endpoint}"
 
-except requests.exceptions.RequestException as e:
-    print(f"An error occurred: {e}")
+    # Set up the standard Authorization header
+    headers = {"Authorization": f"Bearer {API_TOKEN}", "Accept": "application/json"}
 
-conference = data["results"][0]
+    try:
+        response = requests.get(url, headers=headers, params=params)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Failed to fetch event. Status code: {response.status_code}")
+            # print(response.text)
+            return None
+
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+
+
+# Define the specific event ID to fetch
+endpoint_events = f"/export/event/{EVENT_ID}.json"
+events = get_response(endpoint_events, {})
+
+conference = events["results"][0]
 tz = conference["timezone"]
 conference_title = conference["title"]
 
-# Ensure that sessions & talks are sorted by datetime
-conference["sessions"].sort(key=startDatekey)
+endpoint_timetable = f"/export/timetable/{EVENT_ID}.json"
+timetable0 = get_response(endpoint_timetable, {})
+timetable = timetable0["results"][EVENT_ID]
 
-for session in conference["sessions"]:
-    session["contributions"].sort(key=startDatekey)
-
+author_keys = ["firstName", "familyName", "affiliation", "person_id", "email"]
+authors = {}
 
 # Create presentations list
-def format_authors_and_affiliations(primaryauthors, coauthors):
-    authors = primaryauthors + coauthors
+
+
+def format_authors_and_affiliations(presenters, authors):
+    authors = presenters + authors
     affiliation_map = {}  # Tracks { "University Name": 1 }
     affiliations_ordered = []
 
@@ -94,7 +102,7 @@ def format_authors_and_affiliations(primaryauthors, coauthors):
     # 2. Build the author list with superscripts
     author_entries = []
     for author in authors:
-        full_name = f"{author['first_name']} {author['last_name']}"
+        full_name = f"{author['firstName']} {author['familyName']}"
 
         # Indico apparently only allows one affiliation per author?
         # Get indices for this author's affiliations
@@ -126,8 +134,8 @@ def format_authors_and_affiliations(primaryauthors, coauthors):
 </div>"""
 
 
-def format_abstract(title, primaryauthors, coauthors, description):
-    authors_affiliations = format_authors_and_affiliations(primaryauthors, coauthors)
+def format_abstract(title, presenters, authors, description):
+    authors_affiliations = format_authors_and_affiliations(presenters, authors)
     abstract = markdown(description)
     return f"""<p class = \"title\"><strong>{title}</strong></p>
     {authors_affiliations}
@@ -138,71 +146,119 @@ def format_abstract(title, primaryauthors, coauthors, description):
 
 
 def sub_dict(d, keys):
-    return {k: d[k] for k in keys}
+    return {k: d.get(k, "") for k in keys}
+
+
+def add_day_time(item):
+    item["startdatetime"] = dict2datetime(item["startDate"], new_tz=tz)
+    item["start_time"] = item["startdatetime"].strftime("%I:%M %p")
+    item["morning_afternoon"] = (
+        "Morning" if item["startdatetime"].hour < 12 else "Afternoon"
+    )
+    item["day"] = item["startdatetime"].strftime("%a")
+    item["location"] = item.pop("room")  # Rename to match template
+    return item
+
+
+def contribution_add(contribution, session_id=""):
+    contribution["session_id"] = session_id
+    contribution = add_day_time(contribution)
+    contribution["talks"] = []  # Fake
+    if len(contribution["presenters"]) > 0:
+        contribution["email"] = contribution["presenters"][0].get("email", "")
+    else:
+        contribution["email"] = ""  # Assume one presenter
+    contribution["abstract"] = format_abstract(
+        contribution["title"],
+        contribution["presenters"],
+        contribution["authors"],
+        contribution["description"],
+    )
+    contribution["presenters"] = [
+        sub_dict(author, author_keys) for author in contribution["presenters"]
+    ]
+    contribution["authors"] = [
+        sub_dict(author, author_keys) for author in contribution["authors"]
+    ]
+    for author in contribution["presenters"] + contribution["authors"]:
+        if "person_id" not in author or author["person_id"] == "":
+            author["person_id"] = re.sub(
+                r"[^a-zA-Z]", "", author["firstName"] + author["familyName"]
+            )
+        if author["person_id"] not in authors:
+            authors[author["person_id"]] = author
+            authors[author["person_id"]]["presentations"] = [contribution["id"]]
+        else:
+            authors[author["person_id"]]["presentations"].append(contribution["id"])
+    return contribution
+
+
+def session_add(session):
+    session = add_day_time(session)
+    session["talks"] = []
+    for key in session["entries"]:
+        contribution = session["entries"][key]
+        contribution = contribution_add(contribution, session_id=session["id"])
+        session["talks"].append(contribution)
+    # if len(session["talks"]) > 0:
+    #     session["item_type"] = "session"
+    # else:
+    #     session["item_type"] = "other"
+    return session
 
 
 sessions = {
+    "Sun": {"Morning": [], "Afternoon": []},
+    "Mon": {"Morning": [], "Afternoon": []},
+    "Tue": {"Morning": [], "Afternoon": []},
     "Wed": {"Morning": [], "Afternoon": []},
     "Thu": {"Morning": [], "Afternoon": []},
     "Fri": {"Morning": [], "Afternoon": []},
     "Sat": {"Morning": [], "Afternoon": []},
 }
 
-author_keys = ["first_name", "last_name", "affiliation", "person_id", "email"]
-authors = {}
+for day in timetable:
+    for item_key in timetable[day]:
+        item = timetable[day][item_key]
+        if item == {}:
+            continue
+        if item["entryType"] == "Session":
+            item = session_add(item)
+        elif item["entryType"] == "Contribution":
+            item = contribution_add(item)
+        elif item["entryType"] == "Break":
+            item = add_day_time(item)
+        sessions[item["day"]][item["morning_afternoon"]].append(item)
 
-for session in conference["sessions"]:
-    session["startdatetime"] = dict2datetime(session["startDate"], new_tz=tz)
-    session["enddatetime"] = dict2datetime(session["endDate"], new_tz=tz)
-    session["start_time"] = session["startdatetime"].strftime("%I:%M %p")
-    session["end_time"] = session["enddatetime"].strftime("%I:%M %p")
-    session["day"] = session["startdatetime"].strftime("%a")
-    session["morning_afternoon"] = (
-        "Morning" if session["startdatetime"].hour < 12 else "Afternoon"
-    )
-    session["location"] = session.pop("room")
-    for contribution in session["contributions"]:
-        contribution["session_id"] = session["id"]
-        contribution["startdatetime"] = dict2datetime(
-            contribution["startDate"], new_tz=tz
-        )
-        contribution["start_time"] = contribution["startdatetime"].strftime("%I:%M %p")
-        contribution["day"] = contribution["startdatetime"].strftime("%a")
-        contribution["location"] = contribution.pop("room")  # Rename to match template
-        contribution["email"] = contribution["primaryauthors"][0][
-            "email"
-        ]  # Assume one primary author
-        contribution["abstract"] = format_abstract(
-            contribution["title"],
-            contribution["primaryauthors"],
-            contribution["coauthors"],
-            contribution["description"],
-        )
-        contribution["primaryauthors"] = [
-            sub_dict(author, author_keys) for author in contribution["primaryauthors"]
-        ]
-        contribution["coauthors"] = [
-            sub_dict(author, author_keys) for author in contribution["coauthors"]
-        ]
-        for author in contribution["primaryauthors"] + contribution["coauthors"]:
-            if author["person_id"] not in authors:
-                authors[author["person_id"]] = author
-                authors[author["person_id"]]["presentations"] = [contribution["id"]]
-            else:
-                authors[author["person_id"]]["presentations"].append(contribution["id"])
-    session["talks"] = session.pop("contributions")
-    sessions[session["day"]][session["morning_afternoon"]].append(session)
+# Remove empty days
+sessions = {
+    key: sessions[key]
+    for key in sessions
+    if len(sessions[key]["Morning"]) > 0 or len(sessions[key]["Afternoon"]) > 0
+}
+
+# Ensure that sessions & talks are sorted by datetime
+for day in sessions:
+    for morning_afternoon in sessions[day]:
+        sessions[day][morning_afternoon].sort(key=startDatekey)
+        for session in sessions[day][morning_afternoon]:
+            if session["entryType"] != "Session":
+                continue
+            session["talks"].sort(key=startDatekey)
 
 authors = dict(
     sorted(
-        authors.items(), key=lambda item: (item[1]["last_name"], item[1]["first_name"])
+        authors.items(), key=lambda item: (item[1]["familyName"], item[1]["firstName"])
     )
 )
 
 talks = {
-    int(talk["id"]): talk
-    for session in conference["sessions"]
-    for talk in session["talks"]
+    talk["id"]: talk
+    for day in sessions
+    for morning_afternoon in sessions[day]
+    for session in sessions[day][morning_afternoon]
+    for talk in session.get("talks", "")
+    if session["entryType"] == "Session"
 }
 
 talks = dict(sorted(talks.items()))
@@ -211,8 +267,8 @@ talk_keys = [
     "id",
     "session_id",
     "title",
-    "primaryauthors",
-    "coauthors",
+    "presenters",
+    "authors",
     "abstract",
     "location",
     "type",

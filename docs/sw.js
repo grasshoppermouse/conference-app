@@ -1,4 +1,4 @@
-const CACHE_NAME = "hbes2027-v1";
+const CACHE_NAME = "hbes-v1";
 const ASSETS = [
   "./",
   "./index.html",
@@ -21,8 +21,6 @@ const ASSETS = [
   "./share.svg",
   "./box-arrow-up.svg",
   "./map.svg"
-  // "./fonts/bootstrap-icons.woff",
-  // "./fonts/bootstrap-icons.woff2",
 ];
 
 self.addEventListener("install", (event) => {

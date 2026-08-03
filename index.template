@@ -424,7 +424,18 @@
         const shareIconSrc = isAppleDevice ? "./box-arrow-up.svg" : "./share.svg";
 
         // Global State & Pre-serialized JSON setup
-        let favorites = JSON.parse(localStorage.getItem("conference_favorites") || "{}") || {};
+        // Dynamic storage key scoped to the specific conference year/title
+        const CONFERENCE_TITLE = {{ conference_title | tojson }};
+        const STORAGE_KEY = `conference_favorites_${CONFERENCE_TITLE.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+
+        // Clean up favorites from past conferences
+        // Object.keys(localStorage).forEach((key) => {
+        //     if (key.startsWith("conference_favorites_") && key !== STORAGE_KEY) {
+        //         localStorage.removeItem(key);
+        //     }
+        // });
+
+        let favorites = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") || {};
         let talkIndex = {{ talks | default ('{}') | safe }};
         let authorIndex = {{ authors | default ('{}') | safe }};
 
@@ -567,7 +578,7 @@
             const listContainer = document.getElementById("favorites-list");
             if (!listContainer) return;
 
-            favorites = JSON.parse(localStorage.getItem("conference_favorites") || "{}") || {};
+            favorites = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") || {};
             const keys = Object.keys(favorites);
 
             if (keys.length === 0) {
@@ -726,7 +737,7 @@
                     };
                 }
 
-                localStorage.setItem("conference_favorites", JSON.stringify(favorites));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
                 updateFavoriteIcons(type, id);
 
                 const favsView = document.getElementById("app-favorites-view");
@@ -757,7 +768,7 @@
             });
 
             document.getElementById("btn-export-favorites")?.addEventListener("click", async () => {
-                const storedFavs = JSON.parse(localStorage.getItem("conference_favorites") || "{}") || {};
+                const storedFavs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") || {};
                 const keys = Object.keys(storedFavs);
                 const talkKeys = keys.filter((key) => key.startsWith("talk:"));
 

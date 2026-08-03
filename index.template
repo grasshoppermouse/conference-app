@@ -118,7 +118,8 @@
             /* Fixed width ensures consistent centering */
         }
 
-        .action-panel .btn {
+        .action-panel .btn,
+        .action-panel .fav-btn {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -126,7 +127,9 @@
             height: 28px;
             padding: 0;
             margin: 0;
+            /* Overrides .fav-btn { margin-left: 8px; } */
             border: none;
+            background: none;
         }
 
         .action-panel img,
@@ -226,18 +229,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="{{session.id}}" data-title="{{session.slotTitle}}"
                                             data-time="{{session.startdatetime}}" data-location="{{session.location}}"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="{{session.id}}"
-                                            data-title="{{session.slotTitle}}" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="{{session.id}}" data-title="{{session.slotTitle}}"
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>

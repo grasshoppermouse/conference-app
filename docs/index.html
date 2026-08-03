@@ -108,6 +108,37 @@
             border-color: #ced4da;
             font-weight: 600;
         }
+
+        .action-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            /* Fixed width ensures consistent centering */
+        }
+
+        .action-panel .btn,
+        .action-panel .fav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            margin: 0;
+            /* Overrides .fav-btn { margin-left: 8px; } */
+            border: none;
+            background: none;
+        }
+
+        .action-panel img,
+        .action-panel .share-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            display: block;
+        }
     </style>
     <script src="html5-qrcode.min.js" type="text/javascript"></script>
 </head>
@@ -321,18 +352,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150530" data-title="Plenary"
                                             data-time="2026-07-27 08:45:00-07:00" data-location="Ballroom"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150530"
-                                            data-title="Plenary" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150530" data-title="Plenary"
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -425,18 +456,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150521" data-title="Plenary"
                                             data-time="2026-07-27 10:45:00-07:00" data-location="Ballroom"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150521"
-                                            data-title="Plenary" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150521" data-title="Plenary"
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -540,18 +571,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150532" data-title=""
                                             data-time="2026-07-27 13:30:00-07:00" data-location="Ballroom A&B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150532"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150532" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -683,18 +714,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s170783" data-title=""
                                             data-time="2026-07-27 13:30:00-07:00" data-location="Legacy B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s170783"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s170783" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -826,18 +857,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s170785" data-title=""
                                             data-time="2026-07-27 13:30:00-07:00" data-location="Ballroom C&D"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s170785"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s170785" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -952,18 +983,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s166854" data-title=""
                                             data-time="2026-07-27 13:30:00-07:00" data-location="Legacy A"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s166854"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s166854" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -1107,18 +1138,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150537" data-title=""
                                             data-time="2026-07-27 16:00:00-07:00" data-location="Ballroom A&B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150537"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150537" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -1250,18 +1281,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s170784" data-title=""
                                             data-time="2026-07-27 16:00:00-07:00" data-location="Legacy A"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s170784"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s170784" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -1393,18 +1424,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172710" data-title=""
                                             data-time="2026-07-27 16:00:00-07:00" data-location="Ballroom C&D"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172710"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172710" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -1536,18 +1567,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172147" data-title=""
                                             data-time="2026-07-27 16:00:00-07:00" data-location="Legacy B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172147"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172147" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -1662,18 +1693,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172840" data-title=""
                                             data-time="2026-07-27 18:00:00-07:00" data-location=""
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172840"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172840" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -1750,18 +1781,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150520" data-title="Plenary"
                                             data-time="2026-07-28 08:45:00-07:00" data-location="Ballroom"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150520"
-                                            data-title="Plenary" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150520" data-title="Plenary"
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -1854,18 +1885,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150541" data-title="Plenary"
                                             data-time="2026-07-28 10:45:00-07:00" data-location="Ballroom"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150541"
-                                            data-title="Plenary" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150541" data-title="Plenary"
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -1969,18 +2000,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150564" data-title=""
                                             data-time="2026-07-28 13:30:00-07:00" data-location="Ballroom A&B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150564"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150564" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -2112,18 +2143,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s170793" data-title=""
                                             data-time="2026-07-28 13:30:00-07:00" data-location="Legacy B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s170793"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s170793" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -2255,18 +2286,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s170807" data-title=""
                                             data-time="2026-07-28 13:30:00-07:00" data-location="Ballroom C&D"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s170807"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s170807" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -2398,18 +2429,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172139" data-title=""
                                             data-time="2026-07-28 13:30:00-07:00" data-location="Legacy A"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172139"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172139" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -2553,18 +2584,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150556" data-title=""
                                             data-time="2026-07-28 16:00:00-07:00" data-location="Ballroom A&B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150556"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150556" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -2696,18 +2727,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s170854" data-title=""
                                             data-time="2026-07-28 16:00:00-07:00" data-location="Ballroom C&D"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s170854"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s170854" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -2839,18 +2870,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172140" data-title=""
                                             data-time="2026-07-28 16:00:00-07:00" data-location="Legacy A"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172140"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172140" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -2982,18 +3013,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s175431" data-title=""
                                             data-time="2026-07-28 16:00:00-07:00" data-location="Legacy B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s175431"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s175431" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -3125,18 +3156,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s175445" data-title=""
                                             data-time="2026-07-28 18:00:00-07:00" data-location=""
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s175445"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s175445" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -3213,18 +3244,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150542" data-title=""
                                             data-time="2026-07-29 08:45:00-07:00" data-location="Ballroom"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150542"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150542" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -3317,18 +3348,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150543" data-title=""
                                             data-time="2026-07-29 10:45:00-07:00" data-location="Ballroom"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150543"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150543" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -3420,18 +3451,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172844" data-title=""
                                             data-time="2026-07-29 13:00:00-07:00" data-location=""
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172844"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172844" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -3508,18 +3539,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150544" data-title=""
                                             data-time="2026-07-30 08:45:00-07:00" data-location="Ballroom"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150544"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150544" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -3612,18 +3643,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150545" data-title=""
                                             data-time="2026-07-30 10:45:00-07:00" data-location="Ballroom"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150545"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150545" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -3727,18 +3758,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150568" data-title=""
                                             data-time="2026-07-30 13:30:00-07:00" data-location="Optimist A"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150568"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150568" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -3870,18 +3901,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s170800" data-title=""
                                             data-time="2026-07-30 13:30:00-07:00" data-location="Legacy B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s170800"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s170800" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -4013,18 +4044,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s170828" data-title=""
                                             data-time="2026-07-30 13:30:00-07:00" data-location="Optimist B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s170828"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s170828" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -4156,18 +4187,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172149" data-title=""
                                             data-time="2026-07-30 13:30:00-07:00" data-location="Legacy A"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172149"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172149" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -4311,18 +4342,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s170810" data-title=""
                                             data-time="2026-07-30 16:00:00-07:00" data-location="Optimist B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s170810"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s170810" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -4437,18 +4468,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172126" data-title=""
                                             data-time="2026-07-30 16:00:00-07:00" data-location="Optimist A"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172126"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172126" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -4580,18 +4611,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172150" data-title=""
                                             data-time="2026-07-30 16:00:00-07:00" data-location="Legacy A"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172150"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172150" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -4723,18 +4754,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s175439" data-title=""
                                             data-time="2026-07-30 16:00:00-07:00" data-location="Legacy B"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s175439"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s175439" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -4815,18 +4846,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172842" data-title=""
                                             data-time="2026-07-30 19:00:00-07:00" data-location="Ballroom"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172842"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172842" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -4915,18 +4946,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s150546" data-title=""
                                             data-time="2026-07-31 08:45:00-07:00" data-location="Auditorium"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s150546"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s150546" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -5019,18 +5050,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s169875" data-title=""
                                             data-time="2026-07-31 10:45:00-07:00" data-location="Auditorium"
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s169875"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s169875" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>
@@ -5071,18 +5102,18 @@
                                     </button>
 
                                     <!-- Action Panel -->
-                                    <div class="d-flex flex-column align-items-center justify-content-center border-start ps-2 pe-3 py-1 bg-white"
-                                        style="min-width: 45px; z-index: 2">
-                                        <button type="button" class="fav-btn p-1 mb-1" data-type="session"
+                                    <!-- Action Panel -->
+                                    <div class="action-panel border-start py-1 bg-white" style="z-index: 2">
+                                        <button type="button" class="fav-btn mb-1" data-type="session"
                                             data-id="s172845" data-title=""
                                             data-time="2026-07-31 13:30:00-07:00" data-location=""
                                             title="Favorite">
-                                            <img src="./star.svg" alt="Favorite" style="width: 18px; height: 18px" />
+                                            <img src="./star.svg" alt="Favorite" />
                                         </button>
 
-                                        <button type="button" class="btn btn-link p-1 text-muted share-btn"
-                                            data-route="session" data-id="s172845"
-                                            data-title="" title="Share Session">
+                                        <button type="button" class="btn btn-link share-btn" data-route="session"
+                                            data-id="s172845" data-title=""
+                                            title="Share Session">
                                             <img class="share-icon" src="./share.svg" alt="Share" />
                                         </button>
                                     </div>

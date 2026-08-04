@@ -76,6 +76,7 @@ events = get_response(endpoint_events, {})
 conference = events["results"][0]
 tz = conference["timezone"]
 conference_title = conference["title"]
+conference_year = dict2datetime(conference["startDate"]).year
 
 endpoint_timetable = f"/export/timetable/{EVENT_ID}.json"
 timetable0 = get_response(endpoint_timetable, {})
@@ -291,3 +292,8 @@ with open("docs/index.html", "w", encoding="utf-8") as file:
             authors=json.dumps(authors, default=str),
         )
     )
+
+with open("manifest.template", "r", encoding="utf-8") as file:
+    template = Template(file.read())
+with open("docs/manifest.json", "w", encoding="utf-8") as file:
+    file.write(template.render(conference_year=conference_year))

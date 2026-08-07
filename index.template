@@ -153,11 +153,11 @@
                 <div class="input-group">
                     <input type="text" id="search-input" class="form-control form-control-lg"
                         placeholder="Search talks by title or abstract..." autocomplete="off" />
-                    <button class="btn btn-outline-secondary" type="button" id="clear-search">
+                    <button class="btn btn-small" type="button" id="clear-search" style="display: none;">
                         <img src="./x.svg" alt="X" />
                     </button>
                     <!-- QR Code Scan Trigger Button -->
-                    <button class="btn btn-outline-secondary" type="button" id="btn-scan-qr" title="Scan Badge QR">
+                    <button class="btn btn-outline" type="button" id="btn-scan-qr" title="Scan Badge QR">
                         <img src="./qr-code-scan.svg" alt="QRcode" />
                     </button>
                 </div>
@@ -1003,9 +1003,15 @@
             const searchResults = document.getElementById("search-results");
 
             if (searchInput && searchResults) {
+                const clearBtn = document.getElementById("clear-search");
                 searchInput.addEventListener("input", (e) => {
                     const query = e.target.value.toLowerCase().trim();
                     searchResults.innerHTML = "";
+
+                    // Toggle visibility of the clear button
+                    if (clearBtn) {
+                        clearBtn.style.display = query.length > 0 ? "inline-block" : "none";
+                    }
 
                     if (query.length < 2) return;
 
